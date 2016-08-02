@@ -1,0 +1,80 @@
+---
+- hosts: localhost
+  gather_facts: false
+  vars:
+    database_config: "{{ lookup('template', '../templates/database_config.json.j2') }}"
+    server_config: "{{ lookup('template', '../templates/server_config.json.j2') }}"
+  tasks:
+    - include_vars: ../defaults/main.yml
+
+    - name: verify server_confg.json.j2 expands correctly
+      assert:
+        that:
+          - server_config.default_resource_directory == irods_default_resource_directory
+          - server_config.default_resource_directory == irods_default_resource_directory
+          - server_config.default_resource_name == irods_default_resource_name
+          - server_config.icat_host == irods_icat_host
+          - server_config.negotiation_key == irods_negotiation_key
+          - server_config.server_control_plane_key == irods_server_control_plane_key
+          - server_config.server_port_range_end == irods_server_port_range_end
+          - server_config.server_port_range_start == irods_server_port_range_start
+          - server_config.zone_key == irods_zone_key
+          - server_config.zone_user == irods_zone_user
+
+    - name: verify data_config.json.j2 expands correctly
+      assert:
+        that:
+          - database_config.db_host == irods_db_host
+          - database_config.db_password == irods_db_password
+          - database_config.db_port == irods_db_port
+          - database_config.db_username == irods_db_username
+
+- hosts: localhost
+  gather_facts: false
+  vars:
+    ipc_env: "{{ lookup('template', '../templates/ipc_env.re.j2') }}"
+  tasks:
+    - include_vars: ../defaults/main.yml
+
+    - name: verify constants expand correctly in ipc_env.re.j2
+      assert:
+        that:
+          - ipc_env|search("ipc_AMQP_HOST = 'localhost'")
+          - ipc_env|search("ipc_AMQP_PORT = 5672")
+          - ipc_env|search("ipc_AMQP_USER = 'guest'")
+          - ipc_env|search("ipc_AMQP_PASSWORD = 'guest'")
+          - ipc_env|search("ipc_AMQP_EPHEMERAL = true")
+          - ipc_env|search("ipc_RE_HOST = 'localhost'")
+          - ipc_env|search("ipc_RODSADMIN = 'rods'")
+          - not ipc_env|search("acSetNumThreads")
+
+- hosts: localhost
+  gather_facts: false
+  vars:
+    ipc_env: "{{ lookup('template', '../templates/ipc_env.re.j2') }}"
+  tasks:
+    - include_vars: ../defaults/main.yml
+
+    - include_vars: single_threaded_resources.yml
+
+    - debug: msg="{{ ipc_env }}"
+
+    - name: verify acSetNumThreads defined correctly in ipc_env.re
+      assert:
+        that:
+          - ipc_env|search("acSetNumThreads")
+          - ipc_env|search("ON($rescName == 'resource-1' && $clientAddr == ipc_IES_IP)"|regex_escape())
+          - ipc_env|search("ON($rescName == 'resource-2' && $clientAddr == ipc_IES_IP)"|regex_escape())
+
+- hosts: localhost
+  remote_user: root
+  roles:
+    - ../../ansible-cyverse-irods-cfg
+
+  post_tasks:
+    - name: Verify static rules files are in place
+      find: paths=/etc/irods/ipc_custom.re
+
+    - name: Verify templated files are in place
+      find: paths=/etc/irods/server_config.json
+

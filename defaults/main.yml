@@ -1,0 +1,23 @@
+---
+irods_icat_host: localhost
+irods_default_resource_directory: /var/lib/irods/iRODS/Vault
+irods_default_resource_name: demoResc
+irods_negotiation_key: TEMPORARY_32byte_negotiation_key
+irods_server_control_plane_key: TEMPORARY__32byte_ctrl_plane_key
+irods_server_port_range_start: 20000
+irods_server_port_range_end: 20199
+irods_zone_key: TEMPORARY_zone_key
+irods_zone_user: rods
+
+irods_db_host: localhost
+irods_db_port: 5432
+irods_db_username: irods
+irods_db_password: testpassword
+
+irods_amqp_host: localhost
+irods_amqp_port: 5672
+irods_amqp_username: guest
+irods_amqp_password: guest
+irods_amqp_ephemeral: true
+
+irods_single_threaded_resources: []
