@@ -23,13 +23,13 @@ install:
 
 before_script:
   # Create irods user
-  - useradd --system irods
+  - sudo useradd --system irods
 
   # Create the directory for the configuration files
-  - mkdir --parents /etc/irods
+  - sudo mkdir --parents /etc/irods
 
   # Give the irods user ownership
-  - chown --recursive irods:irods /etc/irods
+  - sudo chown --recursive irods:irods /etc/irods
 
 script:
   # Basic role syntax check
