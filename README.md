@@ -1,5 +1,6 @@
-Role Name
-=========
+ansible-cyverse-irods-cfg
+=========================
+[![Build Status](https://travis-ci.org/CyVerse-Ansible/ansible-cyverse-irods-cfg.svg?branch=master)](https://travis-ci.org/CyVerse-Ansible/ansible-cyverse-irods-cfg)
 
 This is a role for configuring CyVerse iRODS 4 grids.
 
