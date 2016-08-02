@@ -65,7 +65,7 @@
           - ipc_env|search("ON($rescName == 'resource-2' && $clientAddr == ipc_IES_IP)"|regex_escape())
 
 - hosts: localhost
-  remote_user: root
+  become: true
   roles:
     - ../../ansible-cyverse-irods-cfg
 
