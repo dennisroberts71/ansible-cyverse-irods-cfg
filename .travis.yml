@@ -32,8 +32,8 @@ before_script:
   - sudo chown --recursive irods:irods /etc/irods
 
 script:
-  # Basic role syntax check
-  - ansible-playbook tests/test.yml -i tests/inventory
+  # The test
+  - sudo ansible-playbook -i tests/inventory tests/test.yml
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
