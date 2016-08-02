@@ -31,9 +31,6 @@ before_script:
   # Give the irods user ownership
   - sudo chown --recursive irods:irods /etc/irods
 
-  # Stop ssh from hanging ansible
-  - echo "StringHostKeyChecking no" >> ~/.ssh/config
-
 script:
   # The test
   - ansible-playbook -i tests/inventory tests/test.yml
