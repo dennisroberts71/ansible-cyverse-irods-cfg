@@ -57,8 +57,6 @@
 
     - include_vars: single_threaded_resources.yml
 
-    - debug: msg="{{ ipc_env }}"
-
     - name: verify acSetNumThreads defined correctly in ipc_env.re
       assert:
         that:
