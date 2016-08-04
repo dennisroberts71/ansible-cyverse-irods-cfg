@@ -1,11 +1,14 @@
 ---
-- hosts: localhost
+- name: test the default variables populate the configs correctly
+  hosts: localhost
   gather_facts: false
   vars:
     database_config: "{{ lookup('template', '../templates/database_config.json.j2') }}"
+    ipc_env: "{{ lookup('template', '../templates/ipc_env.re.j2') }}"
     server_config: "{{ lookup('template', '../templates/server_config.json.j2') }}"
   tasks:
-    - include_vars: ../defaults/main.yml
+    - name: include the default variables 
+      include_vars: ../defaults/main.yml
 
     - name: verify server_confg.json.j2 expands correctly
       assert:
@@ -27,13 +30,6 @@
           - database_config.db_password == irods_db_password
           - database_config.db_port == irods_db_port
           - database_config.db_username == irods_db_username
-
-- hosts: localhost
-  gather_facts: false
-  vars:
-    ipc_env: "{{ lookup('template', '../templates/ipc_env.re.j2') }}"
-  tasks:
-    - include_vars: ../defaults/main.yml
 
     - name: verify constants expand correctly in ipc_env.re.j2
       assert:

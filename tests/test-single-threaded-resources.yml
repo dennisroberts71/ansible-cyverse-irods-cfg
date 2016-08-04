@@ -1,12 +1,15 @@
 ---
-- hosts: localhost
+- name: test that single threaded resources are correctly added to ipc_env.re
+  hosts: localhost
   gather_facts: false
   vars:
     ipc_env: "{{ lookup('template', '../templates/ipc_env.re.j2') }}"
   tasks:
-    - include_vars: ../defaults/main.yml
+    - name: include the default variables 
+      include_vars: ../defaults/main.yml
 
-    - include_vars: single_threaded_resources.yml
+    - name: add some single threaded resources
+      include_vars: single_threaded_resources.yml
 
     - name: verify acSetNumThreads defined correctly in ipc_env.re
       assert:
