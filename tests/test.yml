@@ -11,7 +11,6 @@
       assert:
         that:
           - server_config.default_resource_directory == irods_default_resource_directory
-          - server_config.default_resource_directory == irods_default_resource_directory
           - server_config.default_resource_name == irods_default_resource_name
           - server_config.icat_host == irods_icat_host
           - server_config.negotiation_key == irods_negotiation_key
