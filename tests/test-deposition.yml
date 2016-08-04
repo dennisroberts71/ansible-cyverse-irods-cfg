@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  become: true
+  roles:
+    - ../../ansible-cyverse-irods-cfg
+
+  post_tasks:
+    - name: Verify static rules files are in place
+      find: paths=/etc/irods/ipc_custom.re
+
+    - name: Verify templated files are in place
+      find: paths=/etc/irods/server_config.json

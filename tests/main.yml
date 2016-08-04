@@ -1,0 +1,4 @@
+---
+- include: test-defaults.yml
+- include: test-single-threaded-resources.yml
+- include: test-deposition.yml
