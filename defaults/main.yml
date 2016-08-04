@@ -1,6 +1,5 @@
 ---
 irods_icat_host: localhost
-irods_default_resource_directory: /var/lib/irods/iRODS/Vault
 irods_default_resource_name: demoResc
 irods_negotiation_key: TEMPORARY_32byte_negotiation_key
 irods_server_control_plane_key: TEMPORARY__32byte_ctrl_plane_key

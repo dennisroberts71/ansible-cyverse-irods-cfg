@@ -16,8 +16,8 @@ Role Variables
 Variable                           | Required | Default                          | Choices | Comments
 ---------------------------------- | -------- | -------------------------------- | ------- | --------
 `irods_icat_host`                  | no       | localhost                        |         | the FQDN of the IES
-`irods_default_resource_directory` | no       | /var/lib/irods/iRODS/Vault       |         | the absolute path to the vault on the resource server being configured (N/A when configuring IES and it doesn't host a resource)
-`irods_default_resource_name`      | no       | demoResc                         |         | the name of the resource for the resource server being configured (N/A when configuring IES and it doesn't host a resource)
+`irods_default_resource_directory` | no       |                                  |         | the absolute path to the vault on the resource server being configured (N/A when configuring IES and it doesn't host a resource)
+`irods_default_resource_name`      | no       | demoResc                         |         | the name of the default resource
 `irods_negotiation_key`            | no       | TEMPORARY_32byte_negotiation_key |         | the negotiation key
 `irods_server_control_plane_key`   | no       | TEMPORARY__32byte_ctrl_plane_key |         | the server control plane key
 `irods_server_port_range_start`    | no       | 20000                            |         | the first address in the range of auxillary TCP and UDP ports
