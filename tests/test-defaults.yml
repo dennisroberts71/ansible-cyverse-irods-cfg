@@ -4,7 +4,7 @@
   gather_facts: false
   vars:
     database_config: "{{ lookup('template', '../templates/database_config.json.j2') }}"
-    ipc_env: "{{ lookup('template', '../templates/ipc_env.re.j2') }}"
+    ipc_env: "{{ lookup('template', '../templates/ipc-env.re.j2') }}"
     server_config: "{{ lookup('template', '../templates/server_config.json.j2') }}"
   tasks:
     - name: include the default variables 
