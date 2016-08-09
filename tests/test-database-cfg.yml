@@ -48,6 +48,9 @@
         paths: /etc/irods
       register: contents
 
+    - debug:
+        msg: "{{ contents }}"
+
     - name: Verify database_config.json is in place
       fail:
         msg: database_config.json is not present
