@@ -22,6 +22,18 @@
 - name: test that the database_config.json is placed
   hosts: localhost
   become: true
+  pre_tasks:
+    - name: delete /etc/irods
+      file:
+        path: /etc/irods
+        state: absent
+
+    - name: recreate /etc/irods
+      file:
+        path: /etc/irods
+        owner: irods
+        state: directory
+        
   roles:
     - role: ../../ansible-cyverse-irods-cfg
       irods_db:
