@@ -7,10 +7,21 @@
   with_fileglob:
     - "*"
 
-- name: place templated config in /etc/irods
+- name: place ipc-env.re
   template:
-    src: "{{ item }}"
-    dest: /etc/irods/{{ item | regex_replace('\.j2$', '') }} 
+    src: ipc-env.re.j2
+    dest: /etc/irods/ipc-env.re
     owner: irods
-  with_fileglob:
-    - "*.j2"
+
+- name: place server_config.json
+  template:
+    src: server_config.json.j2
+    dest: /etc/irods/server_config.json
+    owner: irods
+
+- name: place database_config.json
+  template:
+    src: database_config.json.j2
+    dest: /etc/irods/database_config.json
+  when: irods_db is defined
+

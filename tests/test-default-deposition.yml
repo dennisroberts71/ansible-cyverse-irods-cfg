@@ -1,0 +1,32 @@
+---
+- name: test the configuration and rule files are placed correctly
+  hosts: localhost
+  become: true
+  roles:
+    - ../../ansible-cyverse-irods-cfg
+
+  post_tasks:
+    - name: Retrieve configuration files
+      find: paths=/etc/irods
+      register: contents
+
+    - name: Verify configuration files are in place
+      fail:
+        msg: missing {{ item }}
+      when: "'/etc/irods/' ~ item not in contents|map(attribute='path')"
+      with_items:
+        - aegis-env.re
+        - bisque.re
+        - coge.re
+        - ipc-amqp.re
+        - ipc-custom.re
+        - ipc-json.re
+        - ipc-logic.re
+        - ipc-uuid.re
+        - ipc-env.re
+        - server_config.json
+
+    - name: Verify database_config.json is not in place 
+      fail:
+        msg: database_config.json is present
+      when: /etc/irods/database_config.json in contents|map(attribute='path')

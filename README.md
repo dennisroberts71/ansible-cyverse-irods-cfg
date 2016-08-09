@@ -24,10 +24,7 @@ Variable                           | Required | Default                         
 `irods_server_port_range_end`      | no       | 20199                            |         | the last address in the range of auxillary TCP and UDP ports
 `irods_zone_key`                   | no       | TEMPORARY_zone_key               |         | the zone key
 `irods_zone_user`                  | no       | rods                             |         | the rodsadmin user to be used by the server being configured
-`irods_db_host`                    | no       | localhost                        |         | the FQDN of the DBMS hosting the ICAT (N/A for non-IES resource servers)
-`irods_db_port`                    | no       | 5432                             |         | the port the DBMS listens on (N/A for non-IES resource servers)
-`irods_db_username`                | no       | irods                            |         | the DBMS user iRODS uses (N/A for non-IES resource servers)
-`irods_db_password`                | no       | testpassword                     |         | the password for the DBMS user iRODS uses (N/A for non-IES resource servers)
+`irods_db`                         | no       |                                  |         | the DBMS connection information, see below (N/A for non-IES resource servers)
 `irods_amqp_host`                  | no       | localhost                        |         | the FQDN of the AMQP broker iRODS publishes to
 `irods_amqp_port`                  | no       | 5672                             |         | the port the AMQP broker listens on
 `irods_amqp_username`              | no       | guest                            |         | the AMQP user iRODS user
@@ -35,6 +32,15 @@ Variable                           | Required | Default                         
 `irods_amqp_ephemeral`             | no       | true                             |         | whether or not the `irods` AMQP exchange will persist when iRODS disconnects from the AMQP broker
 `irods_single_threaded_resources`  | no       | []                               |         | a list of resources that only support single threaded transfers
 
+
+`irods_db` fields
+
+Variable   | Required | Default | Choices | Comments
+-----------| -------- | ------- | ------- | --------
+`host`     | yes      |         |         | the FQDN of the DBMS hosting the ICAT
+`port`     | yes      |         |         | the port the DBMS listens on
+`username` | yes      |         |         | the DBMS user iRODS uses
+`password` | yes      |         |         | the password for the DBMS user iRODS uses
 
 Dependencies
 ------------

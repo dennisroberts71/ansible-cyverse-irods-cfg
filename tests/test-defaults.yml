@@ -3,7 +3,6 @@
   hosts: localhost
   gather_facts: false
   vars:
-    database_config: "{{ lookup('template', '../templates/database_config.json.j2') }}"
     ipc_env: "{{ lookup('template', '../templates/ipc-env.re.j2') }}"
     server_config: "{{ lookup('template', '../templates/server_config.json.j2') }}"
   tasks:
@@ -22,14 +21,6 @@
           - server_config.server_port_range_start == irods_server_port_range_start
           - server_config.zone_key == irods_zone_key
           - server_config.zone_user == irods_zone_user
-
-    - name: verify data_config.json.j2 expands correctly
-      assert:
-        that:
-          - database_config.db_host == irods_db_host
-          - database_config.db_password == irods_db_password
-          - database_config.db_port == irods_db_port
-          - database_config.db_username == irods_db_username
 
     - name: verify constants expand correctly in ipc_env.re.j2
       assert:

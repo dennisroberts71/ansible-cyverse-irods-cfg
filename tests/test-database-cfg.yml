@@ -1,0 +1,38 @@
+---
+- name: test the default variables populate the configs correctly
+  hosts: localhost
+  gather_facts: false
+  vars:
+    database_config: "{{ lookup('template', '../templates/database_config.json.j2') }}"
+  tasks:
+    - name: include the default variables
+      include_vars: ../defaults/main.yml
+
+    - name: include the irods_db overrides
+      include_vars: ies.yml
+
+    - name: verify data_config.json.j2 expands correctly
+      assert:
+        that:
+          - database_config.db_host == irods_db.host
+          - database_config.db_password == irods_db.password
+          - database_config.db_port == irods_db.port
+          - database_config.db_username == irods_db.username
+
+- name: test that the database_config.json is placed
+  hosts: localhost
+  become: true
+  pre_tasks:
+    - name: include irods_db 
+      include_vars: ies.yml
+
+  roles:
+    - role: ../../ansible-cyverse-irods-cfg
+      irods_db: "{{ irods_db }}"
+
+  post_tasks:
+    - name: Verify database_config.json is in place
+      fail:
+        msg: database_config.json is not present
+      when: /etc/irods/database_config.json not in contents|map(attribute='path')
+

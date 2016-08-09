@@ -1,9 +1,9 @@
 {
     "catalog_database_type": "postgres", 
-    "db_host": "{{ irods_db_host }}", 
+    "db_host": "{{ irods_db.host }}", 
     "db_name": "ICAT", 
     "db_odbc_type": "unix", 
-    "db_password": "{{ irods_db_password }}", 
-    "db_port": {{ irods_db_port }}, 
-    "db_username": "{{ irods_db_username }}"
+    "db_password": "{{ irods_db.password }}", 
+    "db_port": {{ irods_db.port }}, 
+    "db_username": "{{ irods_db.username }}"
 }
