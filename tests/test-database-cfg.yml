@@ -31,6 +31,11 @@
         password: testpassword
 
   post_tasks:
+    - name: Retrieve configuration files
+      find:
+        paths: /etc/irods
+      register: contents
+
     - name: Verify database_config.json is in place
       fail:
         msg: database_config.json is not present

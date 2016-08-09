@@ -2,12 +2,25 @@
 - name: test the configuration and rule files are placed correctly
   hosts: localhost
   become: true
+  pre_tasks:
+    - name: delete /etc/irods
+      file:
+        path: /etc/irods
+        state: absent
+
+    - name: recreate /etc/irods
+      file:
+        path: /etc/irods
+        owner: irods
+        state: directory
+
   roles:
     - ../../ansible-cyverse-irods-cfg
 
   post_tasks:
     - name: Retrieve configuration files
-      find: paths=/etc/irods
+      find: 
+        paths: /etc/irods
       register: contents
 
     - name: Verify configuration files are in place
