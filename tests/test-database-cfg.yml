@@ -26,14 +26,12 @@
     - name: include irods_db 
       include_vars: ies.yml
 
+    - debug:
+        msg: "{{ irods_db }}"
 
   roles:
     - role: ../../ansible-cyverse-irods-cfg
-      irods_db:
-        host: "{{ irods_db.host }}"
-        port: "{{ irods_db.port }}"
-        username: "{{ irods_db.username }}"
-        password: "{{ irods_db.password }}"
+      irods_db: "{{ irods_db }}"
 
   post_tasks:
     - name: Verify database_config.json is in place
