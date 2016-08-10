@@ -3,16 +3,7 @@
   hosts: localhost
   become: true
   pre_tasks:
-    - name: delete /etc/irods
-      file:
-        path: /etc/irods
-        state: absent
-
-    - name: recreate /etc/irods
-      file:
-        path: /etc/irods
-        owner: irods
-        state: directory
+    - include: tasks/clean-etc-irods.yml
 
   roles:
     - ../../ansible-cyverse-irods-cfg

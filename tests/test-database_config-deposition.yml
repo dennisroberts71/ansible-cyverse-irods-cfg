@@ -5,17 +5,8 @@
   vars_files:
     - vars/irods_db.yml
   pre_tasks:
-    - name: delete /etc/irods
-      file:
-        path: /etc/irods
-        state: absent
+    - include: tasks/clean-etc-irods.yml
 
-    - name: recreate /etc/irods
-      file:
-        path: /etc/irods
-        owner: irods
-        state: directory
-        
   roles:
     - role: ../../ansible-cyverse-irods-cfg
 

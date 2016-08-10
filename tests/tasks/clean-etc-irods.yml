@@ -1,0 +1,12 @@
+---
+- name: delete /etc/irods
+  file:
+    path: /etc/irods
+    state: absent
+
+- name: recreate /etc/irods
+  file:
+    path: /etc/irods
+    owner: irods
+    state: directory
+
