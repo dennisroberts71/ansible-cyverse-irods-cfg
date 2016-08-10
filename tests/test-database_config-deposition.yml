@@ -1,21 +1,4 @@
 ---
-- name: test the default variables populate the configs correctly
-  hosts: localhost
-  gather_facts: false
-  vars_files:
-    - ../defaults/main.yml
-    - irods_db-var.yml
-  vars:
-    database_config: "{{ lookup('template', '../templates/database_config.json.j2') }}"
-  tasks:
-    - name: verify data_config.json.j2 expands correctly
-      assert:
-        that:
-          - database_config.db_host == irods_db.host
-          - database_config.db_password == irods_db.password
-          - database_config.db_port == irods_db.port
-          - database_config.db_username == irods_db.username
-
 - name: test that the database_config.json is placed
   hosts: localhost
   become: true

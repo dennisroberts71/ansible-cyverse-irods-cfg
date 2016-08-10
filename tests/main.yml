@@ -1,6 +1,4 @@
 ---
-- include: test-defaults.yml
-- include: test-default-resource-directory.yml
-- include: test-single-threaded-resources.yml
-- include: test-database-cfg.yml
+- include: test-cfg-gen.yml
 - include: test-default-deposition.yml
+- include: test-database_config-deposition.yml
