@@ -2,15 +2,12 @@
 - name: test that default_resource_directory is populated correctly
   hosts: localhost
   gather_facts: false
+  vars_files:
+    - ../defaults/main.yml
+    - irods_default_resource_directory-var.yml
   vars:
     server_config: "{{ lookup('template', '../templates/server_config.json.j2') }}"
   tasks:
-    - name: include the default variables
-      include_vars: ../defaults/main.yml
-
-    - name: override irods_default_resource_directory
-      include_vars: default_resource_directory.yml
-
     - name: verify that default_resource_directory is populated
       assert:
         that:

@@ -2,15 +2,12 @@
 - name: test the default variables populate the configs correctly
   hosts: localhost
   gather_facts: false
+  vars_files:
+    - ../defaults/main.yml
+    - irods_db-var.yml
   vars:
     database_config: "{{ lookup('template', '../templates/database_config.json.j2') }}"
   tasks:
-    - name: include the default variables
-      include_vars: ../defaults/main.yml
-
-    - name: include the irods_db overrides
-      include_vars: ies.yml
-
     - name: verify data_config.json.j2 expands correctly
       assert:
         that:
