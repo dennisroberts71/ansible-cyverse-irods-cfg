@@ -34,3 +34,26 @@
       fail:
         msg: database_config.json is present
       when: "'/etc/irods/database_config.json' in contents.files | map(attribute='path') | list"
+
+- name: test that the database_config.json is placed
+  hosts: localhost
+  become: true
+  vars_files:
+    - vars/irods_db.yml
+  pre_tasks:
+    - include: tasks/clean-etc-irods.yml
+
+  roles:
+    - role: ../../ansible-cyverse-irods-cfg
+
+  post_tasks:
+    - name: Retrieve configuration files
+      find:
+        paths: /etc/irods
+      register: contents
+
+    - name: Verify database_config.json is in place
+      fail:
+        msg: database_config.json is not present
+      when: "'/etc/irods/database_config.json' not in contents.files | map(attribute='path') | list"
+

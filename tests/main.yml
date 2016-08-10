@@ -1,4 +1,3 @@
 ---
 - include: test-cfg-gen.yml
-- include: test-default-deposition.yml
-- include: test-database_config-deposition.yml
+- include: test-deposition.yml
