@@ -49,7 +49,7 @@
       register: contents
 
     - debug:
-        msg: "{{ contents }}"
+        msg: "{{ contents|map(attribute='path') }}"
 
     - name: Verify database_config.json is in place
       fail:
