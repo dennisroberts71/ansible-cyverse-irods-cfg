@@ -19,7 +19,7 @@
       register: contents
 
     - debug:
-        msg: "{{ contents" }}
+        msg: "{{ contents }}"
 
   roles:
     - ../../ansible-cyverse-irods-cfg
