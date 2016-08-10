@@ -19,9 +19,6 @@
     dest: /etc/irods/server_config.json
     owner: irods
 
-- debug:
-    var: irods_db
-
 - name: place database_config.json
   template:
     src: database_config.json.j2
