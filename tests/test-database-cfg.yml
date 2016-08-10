@@ -57,5 +57,5 @@
     - name: Verify database_config.json is in place
       fail:
         msg: database_config.json is not present
-      when: "'/etc/irods/database_config.json' not in contents | map(attribute='path') | list"
+      when: "'/etc/irods/database_config.json' not in contents.files | map(attribute='path') | list"
 
