@@ -48,12 +48,6 @@
         paths: /etc/irods
       register: contents
 
-    - debug:
-        msg: "{{ contents }}"
-
-    - debug:
-        msg: "{{ contents.files | map(attribute='path') | list }}"
- 
     - name: Verify database_config.json is in place
       fail:
         msg: database_config.json is not present
