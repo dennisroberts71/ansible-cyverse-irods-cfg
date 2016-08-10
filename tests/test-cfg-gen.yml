@@ -38,7 +38,7 @@
   gather_facts: false
   vars_files:
     - ../defaults/main.yml
-    - irods_default_resource_directory-var.yml
+    - vars/irods_default_resource_directory.yml
   vars:
     server_config: "{{ lookup('template', '../templates/server_config.json.j2') }}"
   tasks:
@@ -52,7 +52,7 @@
   gather_facts: false
   vars_files:
     - ../defaults/main.yml
-    - irods_single_threaded_resources-var.yml
+    - vars/irods_single_threaded_resources.yml
   vars:
     ipc_env: "{{ lookup('template', '../templates/ipc-env.re.j2') }}"
   tasks:
@@ -68,7 +68,7 @@
   gather_facts: false
   vars_files:
     - ../defaults/main.yml
-    - irods_db-var.yml
+    - vars/irods_db.yml
   vars:
     database_config: "{{ lookup('template', '../templates/database_config.json.j2') }}"
   tasks:

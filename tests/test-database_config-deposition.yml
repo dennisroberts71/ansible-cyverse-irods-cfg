@@ -3,7 +3,7 @@
   hosts: localhost
   become: true
   vars_files:
-    - irods_db-var.yml
+    - vars/irods_db.yml
   pre_tasks:
     - name: delete /etc/irods
       file:
