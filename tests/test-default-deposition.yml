@@ -14,13 +14,6 @@
         owner: irods
         state: directory
 
-    - find:
-        paths: /etc/irods
-      register: contents
-
-    - debug:
-        msg: "{{ contents }}"
-
   roles:
     - ../../ansible-cyverse-irods-cfg
 
