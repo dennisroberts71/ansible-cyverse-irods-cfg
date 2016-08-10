@@ -26,7 +26,7 @@
     - name: Verify configuration files are in place
       fail:
         msg: missing {{ item }}
-      when: "'/etc/irods/' ~ item not in contents|map(attribute='path')"
+      when: "'/etc/irods/' ~ item not in contents.files | map(attribute='path') | list"
       with_items:
         - aegis-env.re
         - bisque.re
@@ -42,4 +42,4 @@
     - name: Verify database_config.json is not in place 
       fail:
         msg: database_config.json is present
-      when: /etc/irods/database_config.json in contents|map(attribute='path')
+      when: "'/etc/irods/database_config.json' in contents.files | map(attribute='path') | list"

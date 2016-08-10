@@ -49,7 +49,10 @@
       register: contents
 
     - debug:
-        msg: "{{ contents | map(attribute='path') | list }}"
+        msg: "{{ contents }}"
+
+    - debug:
+        msg: "{{ contents.files | map(attribute='path') | list }}"
  
     - name: Verify database_config.json is in place
       fail:
