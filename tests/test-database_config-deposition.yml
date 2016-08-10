@@ -2,6 +2,8 @@
 - name: test that the database_config.json is placed
   hosts: localhost
   become: true
+  vars_files:
+    - irods_db-var.yml
   pre_tasks:
     - name: delete /etc/irods
       file:
@@ -16,11 +18,6 @@
         
   roles:
     - role: ../../ansible-cyverse-irods-cfg
-      irods_db:
-        host: localhost
-        port: 5432
-        username: irods
-        password: testpassword
 
   post_tasks:
     - name: Retrieve configuration files
