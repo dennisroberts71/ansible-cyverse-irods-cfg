@@ -11,7 +11,7 @@
     - name: verify server_confg.json.j2 expands correctly
       assert:
         that:
-          - server_config.default_resource_directory is undefined
+          - server_config.default_resource_directory == irods_default_resource_directory
           - server_config.default_resource_name == irods_default_resource_name
           - server_config.icat_host == irods_icat_host
           - server_config.negotiation_key == irods_negotiation_key
@@ -32,20 +32,6 @@
           - ipc_env|search("ipc_RE_HOST = 'localhost'")
           - ipc_env|search("ipc_RODSADMIN = 'rods'")
           - not ipc_env|search("acSetNumThreads")
-
-- name: test that default_resource_directory is populated correctly
-  hosts: localhost
-  gather_facts: false
-  vars_files:
-    - ../defaults/main.yml
-    - vars/irods_default_resource_directory.yml
-  vars:
-    server_config: "{{ lookup('template', '../templates/server_config.json.j2') }}"
-  tasks:
-    - name: verify that default_resource_directory is populated
-      assert:
-        that:
-          - server_config.default_resource_directory == irods_default_resource_directory
 
 - name: test that single threaded resources are correctly added to ipc-env.re
   hosts: localhost

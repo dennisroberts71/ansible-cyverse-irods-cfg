@@ -11,9 +11,7 @@
     "default_dir_mode": "0750", 
     "default_file_mode": "0600", 
     "default_hash_scheme": "MD5",
-{% if irods_default_resource_directory is defined %}
     "default_resource_directory": "{{ irods_default_resource_directory }}",
-{% endif %}
     "default_resource_name" : "{{ irods_default_resource_name }}",
     "environment_variables": {}, 
     "federation": [], 
