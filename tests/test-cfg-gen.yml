@@ -6,6 +6,7 @@
     - ../defaults/main.yml
   vars:
     ipc_env: "{{ lookup('template', '../templates/ipc-env.re.j2') }}"
+    irods_environment: "{{ lookup('template', '../templates/irods_environment.json.j2') }}"
     server_config: "{{ lookup('template', '../templates/server_config.json.j2') }}"
   tasks:
     - name: verify server_confg.json.j2 expands correctly
@@ -20,6 +21,12 @@
           - server_config.server_port_range_start == irods_server_port_range_start
           - server_config.zone_key == irods_zone_key
           - server_config.zone_user == irods_zone_user
+
+    - name: verify irods_environment.json.j2 expands correctly
+      assert:
+        that:
+          - irods_environment.irods_host == irods_icat_host
+          - irods_environment.irods_user_name == irods_zone_user
 
     - name: verify constants expand correctly in ipc_env.re.j2
       assert:

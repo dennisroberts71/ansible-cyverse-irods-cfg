@@ -32,6 +32,12 @@
       register: response
       failed_when: response.stat.exists
 
+    - name: Verify irods_environment.json is in place
+      stat:
+        path: /var/lib/irods/.irods/irods_environment.json
+      register: response
+      failed_when: not response.stat.exists
+
 - name: test that the database_config.json is placed
   hosts: localhost
   become: true
