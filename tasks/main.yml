@@ -28,4 +28,4 @@
 - name: place irods_environment.json
   template:
     src: irods_environment.json.j2
-    dest: /var/lib/irods/.irods/irods_environment.json.j2
+    dest: /var/lib/irods/.irods/irods_environment.json
