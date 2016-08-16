@@ -26,7 +26,11 @@
       assert:
         that:
           - irods_environment.irods_host == irods_icat_host
+          - irods_environment.irods_default_resource == irods_default_resource_name
+          - irods_environment.irods_home == '/iplant/home/' ~ irods_zone_user
+          - irods_environment.irods_cwd == '/iplant/home/' ~ irods_zone_user
           - irods_environment.irods_user_name == irods_zone_user
+          - irods_environment.irods_server_control_plane_key == irods_server_control_plane_key
 
     - name: verify constants expand correctly in ipc_env.re.j2
       assert:
@@ -56,7 +60,7 @@
           - ipc_env|search("ON($rescName == 'resource-1' && $clientAddr == ipc_IES_IP)"|regex_escape())
           - ipc_env|search("ON($rescName == 'resource-2' && $clientAddr == ipc_IES_IP)"|regex_escape())
 
-- name: test the default variables populate the configs correctly
+- name: verify data_config.json.j2 expands correctly
   hosts: localhost
   gather_facts: false
   vars_files:
