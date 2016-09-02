@@ -20,7 +20,7 @@ acSetNumThreads {
 }
 {% endif %}
 
-acSetRescSchemeForCreate { msiSetDefaultResc('rootResource', 'preferred'); }
+acSetRescSchemeForCreate { msiSetDefaultResc('{{ irods_default_resource_name }}', 'preferred'); }
 
-acSetRescSchemeForRepl { msiSetDefaultResc('rootResource', 'preferred'); }
+acSetRescSchemeForRepl { msiSetDefaultResc('{{ irods_default_resource_name }}', 'preferred'); }
 
