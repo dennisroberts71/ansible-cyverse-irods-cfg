@@ -181,10 +181,8 @@ handleNewObject(*IESHost, *Client, *Path) {
 
 # Add a call to this rule from inside the acPostProcForCollCreate PEP.
 bisque_acPostProcForCollCreate {
-  if (ipc_BISQUE_URL != '') {
-    if ($collName like regex "/iplant/home/[^/]\*/bisque_data") {
-      ensureBisqueWritePermColl($collName);
-    }
+  if ($collName like regex "/iplant/home/[^/]\*/bisque_data") {
+    ensureBisqueWritePermColl($collName);
   }   
 }
 
