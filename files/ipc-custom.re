@@ -1,4 +1,4 @@
-# VERSION: 13
+# VERSION: 14
 #
 # All customizations done to the iRODS rule logic are placed in this file or should be included by
 # this file.
@@ -28,7 +28,6 @@
 
 # POLICIES
 
-acAclPolicy { msiAclPolicy("STRICT"); }
 acBulkPutPostProcPolicy { msiSetBulkPutPostProcPolicy("on"); }
 acSetReServerNumProc { msiSetReServerNumProc("4"); }
 
