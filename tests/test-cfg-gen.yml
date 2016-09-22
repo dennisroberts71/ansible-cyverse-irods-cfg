@@ -25,7 +25,7 @@
     - name: verify irods_environment.json.j2 expands correctly
       assert:
         that:
-          - irods_environment.irods_host == irods_icat_host
+          - irods_environment.irods_host == inventory_hostname
           - irods_environment.irods_default_resource == irods_default_resource_name
           - irods_environment.irods_home == '/iplant/home/' ~ irods_zone_user
           - irods_environment.irods_cwd == '/iplant/home/' ~ irods_zone_user
