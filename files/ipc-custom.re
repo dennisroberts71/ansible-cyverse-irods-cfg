@@ -84,9 +84,6 @@ acPreProcForModifyAVUMetadata(*Option, *SourceItemType, *TargetItemType, *Source
 # NOTE: The camelcasing is inconsistent here
 acPreprocForRmColl { ipc_acPreprocForRmColl; }
 
-# TODO: All logic that modifies session variables needs to be changed
-acPreProcForWriteSessionVariable(*Var) { succeed; }
-
 
 # POST-PROC RULE HOOKS
 #
