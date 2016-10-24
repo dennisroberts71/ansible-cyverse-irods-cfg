@@ -1,0 +1,10 @@
+---
+- name: ensure pika installed
+  pip:
+    name: pika
+    state: latest
+
+- name: install amqptopicsend.py
+  copy:
+    src: var/lib/irods/iRODS/server/bin/cmd/amqptopicsend.py
+    dest: /var/lib/irods/iRODS/server/bin/cmd/

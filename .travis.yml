@@ -10,6 +10,7 @@ addons:
   apt:
     packages:
     - python-pip
+    - python-virtualenv
 
 install:
   # Install ansible
@@ -26,7 +27,7 @@ before_script:
   - sudo useradd --system --home-dir /var/lib/irods irods
 
   # Create the directory for the configuration files
-  - sudo mkdir --parents /etc/irods /var/lib/irods/.irods
+  - sudo mkdir --parents /etc/irods /var/lib/irods/.irods /var/lib/irods/iRODS/server/bin/cmd
 
   # Give the irods user ownership
   - sudo chown --recursive irods:irods /etc/irods /var/lib/irods

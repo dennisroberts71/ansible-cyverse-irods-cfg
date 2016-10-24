@@ -38,6 +38,12 @@
       register: response
       failed_when: not response.stat.exists
 
+    - name: Verify that amqptopicsend.py is in place
+      stat:
+        path: /var/lib/irods/iRODS/server/bin/cmd/amqptopicsend.py
+      register: response
+      failed_when: not response.stat.exists
+
 - name: test that the database_config.json is placed
   hosts: localhost
   become: true

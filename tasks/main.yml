@@ -1,4 +1,7 @@
 ---
+- include: install_amqptopicsend.yml 
+  when: inventory_hostname == irods_icat_host
+
 - name: place static config in /etc/irods
   copy:
     src: "{{ item }}"
