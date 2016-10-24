@@ -2,7 +2,7 @@
 - name: place static config in /etc/irods
   copy:
     src: "{{ item }}"
-    dest: /etc/irods/
+    dest: /
     owner: irods
   with_fileglob:
     - "*"
