@@ -1,9 +1,10 @@
 # The production environment rule customizations belong in this file.
 
-ipc_AMQP_HOST = '{{ irods_amqp_host }}'
-ipc_AMQP_PORT = {{ irods_amqp_port }}
-ipc_AMQP_USER = '{{ irods_amqp_username }}'
-ipc_AMQP_PASSWORD = '{{ irods_amqp_password }}'
+{% if irods_amqp_uri is not defined or irods_amqp_uri == '' %}
+ipc_AMQP_URI = 'amqp://{{ irods_amqp_username }}:{{ irods_amqp_password }}@{{ irods_amqp_host }}:{{ irods_amqp_port }}/%2F'
+{% else %}
+ipc_AMQP_URI = '{{ irods_amqp_uri }}'
+{% endif %}
 ipc_AMQP_EPHEMERAL = {% if irods_amqp_ephemeral %}true{% else %}false{% endif %}
 
 ipc_IES_IP = '{{ lookup("dig", irods_icat_host) }}'

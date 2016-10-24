@@ -1,0 +1,2 @@
+---
+irods_amqp_uri: amqp://user:password@host:port/vhost

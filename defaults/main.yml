@@ -9,10 +9,14 @@ irods_server_port_range_end: 20199
 irods_zone_key: TEMPORARY_zone_key
 irods_zone_user: rods
 
+irods_amqp_uri: '' # Ex: amqp://guest:guest@localhost:5672/%2F
+
+# These have been deprecated in favor of the URI form
 irods_amqp_host: localhost
 irods_amqp_port: 5672
 irods_amqp_username: guest
 irods_amqp_password: guest
+
 irods_amqp_ephemeral: true
 
 irods_single_threaded_resources: []
