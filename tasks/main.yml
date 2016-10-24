@@ -2,10 +2,10 @@
 - name: place static config in /etc/irods
   copy:
     src: "{{ item }}"
-    dest: /
+    dest: /etc/irods/
     owner: irods
   with_fileglob:
-    - "*"
+    - "etc/irods/*"
 
 - name: place ipc-env.re
   template:
