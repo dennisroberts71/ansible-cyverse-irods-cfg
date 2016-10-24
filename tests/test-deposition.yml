@@ -26,11 +26,11 @@
         - ipc-env.re
         - server_config.json
 
-    - name: Verify database_config.json is not in place
+    - name: Verify database_config.json is in place
       stat:
         path: /etc/irods/database_config.json 
       register: response
-      failed_when: response.stat.exists
+      failed_when: not response.stat.exists
 
     - name: Verify irods_environment.json is in place
       stat:
@@ -44,12 +44,12 @@
       register: response
       failed_when: not response.stat.exists
 
-- name: test that the database_config.json is placed
+- name: test resource server configured correctly
   hosts: localhost
   become: true
   gather_facts: false
   vars_files:
-    - vars/irods_db.yml
+    - vars/irods_icat_host.yml
   pre_tasks:
     - include: tasks/clean-etc-irods.yml
 
@@ -57,9 +57,14 @@
     - role: ../../ansible-cyverse-irods-cfg
 
   post_tasks:
-    - name: Verify database_config.json is in place
+    - name: Verify database_config.json is not in place
       stat:
         path: /etc/irods/database_config.json 
       register: response
-      failed_when: not response.stat.exists
+      failed_when: response.stat.exists
 
+    - name: Verify that amqptopicsend.py is not in place
+      stat:
+        path: /var/lib/irods/iRODS/server/bin/cmd/amqptopicsend.py
+      register: response
+      failed_when: response.stat.exists

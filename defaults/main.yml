@@ -19,4 +19,10 @@ irods_amqp_password: guest
 
 irods_amqp_ephemeral: true
 
+irods_db:
+  host: localhost
+  port: 1247
+  username: irods
+  password: testpassword
+                                                
 irods_single_threaded_resources: []

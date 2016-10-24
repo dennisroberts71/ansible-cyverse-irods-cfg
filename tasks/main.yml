@@ -1,4 +1,23 @@
 ---
+- name: place database_config.json
+  template:
+    src: database_config.json.j2
+    dest: /etc/irods/database_config.json
+    owner: irods
+  when: inventory_hostname == irods_icat_host
+
+- name: place server_config.json
+  template:
+    src: server_config.json.j2
+    dest: /etc/irods/server_config.json
+    owner: irods
+
+- name: place irods_environment.json
+  template:
+    src: irods_environment.json.j2
+    dest: /var/lib/irods/.irods/irods_environment.json
+    owner: irods
+
 - include: install_amqptopicsend.yml 
   when: inventory_hostname == irods_icat_host
 
@@ -16,19 +35,3 @@
     dest: /etc/irods/ipc-env.re
     owner: irods
 
-- name: place server_config.json
-  template:
-    src: server_config.json.j2
-    dest: /etc/irods/server_config.json
-    owner: irods
-
-- name: place database_config.json
-  template:
-    src: database_config.json.j2
-    dest: /etc/irods/database_config.json
-  when: irods_db is defined
-
-- name: place irods_environment.json
-  template:
-    src: irods_environment.json.j2
-    dest: /var/lib/irods/.irods/irods_environment.json

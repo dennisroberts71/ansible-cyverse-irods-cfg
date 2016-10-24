@@ -1,6 +1,0 @@
----
-irods_db:
-  host: localhost
-  port: 1247
-  username: irods
-  password: testpassword
