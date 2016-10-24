@@ -3,7 +3,7 @@
   hosts: localhost
   become: true
   pre_tasks:
-    - include: tasks/clean-etc-irods.yml
+    - include: tasks/clean.yml
 
   roles:
     - ../../ansible-cyverse-irods-cfg
@@ -51,7 +51,7 @@
   vars_files:
     - vars/irods_icat_host.yml
   pre_tasks:
-    - include: tasks/clean-etc-irods.yml
+    - include: tasks/clean.yml
 
   roles:
     - role: ../../ansible-cyverse-irods-cfg

@@ -10,3 +10,7 @@
     owner: irods
     state: directory
 
+- name: delete /var/lib/irods/iRODS/server/bin/cmd/amqptopicsend.py
+  file:
+    path: /var/lib/irods/iRODS/server/bin/cmd/amqptopicsend.py
+    state: absent
