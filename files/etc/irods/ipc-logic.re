@@ -278,7 +278,7 @@ createOrOverwrite {
   *err = errormsg(ensureAdminOwner($objPath), *msg);
   if (*err < 0) { writeLine("serverLog", *msg); }
   
-  *err = errormsg(msiDataObjChksum($objPath, "forceChksum=", $chksum), *msg);
+  *err = errormsg(msiDataObjChksum($objPath, "forceChksum=", *chksum), *msg);
   if (*err < 0) { writeLine("serverLog", *msg); }
   
   if ($writeFlag == 0) { 
