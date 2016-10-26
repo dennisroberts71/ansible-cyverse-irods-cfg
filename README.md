@@ -25,10 +25,11 @@ Variable                           | Required | Default                         
 `irods_zone_key`                   | no       | TEMPORARY_zone_key               |         | the zone key
 `irods_zone_user`                  | no       | rods                             |         | the rodsadmin user to be used by the server being configured
 `irods_db`                         | no       |                                  |         | the DBMS connection information, see below (N/A for non-IES resource servers)
-`irods_amqp_host`                  | no       | localhost                        |         | the FQDN of the AMQP broker iRODS publishes to
-`irods_amqp_port`                  | no       | 5672                             |         | the port the AMQP broker listens on
-`irods_amqp_username`              | no       | guest                            |         | the AMQP user iRODS user
-`irods_amqp_password`              | no       | guest                            |         | the password for the AMQP user
+`irods_amqp_uri`                   | no       |                                              the AMQP URI used to connect to the broker (N/A for non-IES resource servers)
+`irods_amqp_host`                  | no       | localhost                        |         | the FQDN of the AMQP broker iRODS publishes to (DEPRECATED: use `irods_amqp_uri instead`)
+`irods_amqp_port`                  | no       | 5672                             |         | the port the AMQP broker listens on (DEPRECATED: use `irods_amqp_uri instead`)
+`irods_amqp_username`              | no       | guest                            |         | the AMQP user iRODS user (DEPRECATED: use `irods_amqp_uri instead`)
+`irods_amqp_password`              | no       | guest                            |         | the password for the AMQP user (DEPRECATED: use `irods_amqp_uri instead`)
 `irods_amqp_ephemeral`             | no       | true                             |         | whether or not the `irods` AMQP exchange will persist when iRODS disconnects from the AMQP broker
 `irods_single_threaded_resources`  | no       | []                               |         | a list of resources that only support single threaded transfers
 
@@ -55,9 +56,13 @@ Including an example of how to use your role (for instance, with variables passe
   become: true
   gather_facts: true
   roles:
-    - role: cyverse.ansible-cyverse-irods-cfg
-      irods_amqp_username: irods
-      irods_amqp_password: crack-me
+    - role: cyverse-irods-cfg
+      irods_amqp_uri: amqp://guest:guest@localhost:5672/%2F
+      irods_db:
+        host: localhost
+        port: 5432
+        username: irodsuser
+        password: password
 ```           
 
 License
