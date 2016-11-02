@@ -1,12 +1,9 @@
-# VERSION 1
+# VERSION 2
 #
 # bisque.re  
-# Bisque related rules for > iRods 3.0
+# Bisque related rules for > iRods 4.0
 # put this in server/config/reConfigs/bisque.re
 # include this file from within ipc-custom.re
-###########################
-# NOTE:
-# CHANGE CMD_HOST to be irods server host name containing the insert2bisque.py script
 ###############################################
 
 BISQUE_GROUPS = list('NEVP', 'sernec')
@@ -28,20 +25,18 @@ ln(*IESHost, *Permission, *Client, *Path) {
     *argStr = 'ln -P *pArg --alias *aliasArg *pathArg';
     *status = errorcode(msiExecCmd("bisque_ops.py", *argStr, *IESHost, "null", "null", *out));
     if (*status != 0) {
-# This is broken in iRODS 3
-#      msiGetStderrInExecCmdOut(*cmdOut, *resp);
-#      logMsg('FAILURE - *resp');
+      msiGetStderrInExecCmdOut(*out, *resp);
+      logMsg('FAILURE - *resp');
       logMsg('failed to link *Path for *Client with permission *Permission');
       fail;
     } else {
-# Workaround for above ^^^
+      # bisque_ops.py exits normally even when an error occurs.
       msiGetStderrInExecCmdOut(*out, *errMsg);
       if (strlen(*errMsg) > 0) {
         logMsg(*errMsg);
         logMsg('failed to link *Path for *Client with permission *Permission');
         fail;
       }
-# End of workaround
       msiGetStdoutInExecCmdOut(*out, *resp);
       *props = split(trimr(triml(*resp, ' '), '/'), ' ');
 # This is broken in iRODS 3
@@ -82,20 +77,18 @@ mv(*IESHost, *Client, *OldPath, *NewPath) {
     *argStr = 'mv --alias *aliasArg *oldPathArg *newPathArg';
     *status = errorcode(msiExecCmd('bisque_ops.py', *argStr, *IESHost, 'null', 'null', *out));
     if (*status != 0) {
-# This is broken in iRODS 3
-#      msiGetStderrInExecCmdOut(*cmdOut, *resp);
-#      logMsg('FAILURE - *resp');
+      msiGetStderrInExecCmdOut(*out, *resp);
+      logMsg('FAILURE - *resp');
       logMsg('failed to move link from *OldPath to *NewPath for *Client');
       fail;
     } else {
-# Workaround for above ^^^
+      # bisque_ops.py exits normally even when an error occurs.
       msiGetStderrInExecCmdOut(*out, *errMsg);
       if (strlen(*errMsg) > 0) {
         logMsg(*errMsg);
         logMsg('failed to move link from *OldPath to *NewPath for *Client');
         fail;
       }
-# End of workaround
       logMsg('moved link from *OldPath to *NewPath for *Client');
     }
   }
@@ -113,20 +106,18 @@ rm(*IESHost, *Client, *Path) {
     *argStr = 'rm --alias *aliasArg *pathArg';
     *status = errorcode(msiExecCmd("bisque_ops.py", *argStr, *IESHost, "null", "null", *out));
     if (*status != 0) {
-# This is broken in iRODS 3
-#      msiGetStderrInExecCmdOut(*cmdOut, *resp);
-#      logMsg('FAILURE - *resp');
+      msiGetStderrInExecCmdOut(*out, *resp);
+      logMsg('FAILURE - *resp');
       logMsg('failed to remove link to *Path for *Client');
       fail;
     } else {
-# Workaround for above ^^^
+      # bisque_ops.py exits normally even when an error occurs.
       msiGetStderrInExecCmdOut(*out, *errMsg);
       if (strlen(*errMsg) > 0) {
         logMsg(*errMsg);
         logMsg('failed to remove link to *Path for *Client');
         fail;
       }
-# End of workaround
       logMsg('removed link to *Path for *Client');
     }
   }
