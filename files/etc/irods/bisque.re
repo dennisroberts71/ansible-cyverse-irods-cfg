@@ -38,9 +38,10 @@ ln(*IESHost, *Permission, *Client, *Path) {
         fail;
       }
       msiGetStdoutInExecCmdOut(*out, *resp);
-      *props = split(trimr(triml(*resp, ' '), '/'), ' ');
-# This is broken in iRODS 3
-#      *msiStrArray2String(*props, *kvStr);
+      *props = split(trimr(triml(*resp, ' '), '/'), ' ')
+
+# This is broken. See https://github.com/irods/irods/issues/3355
+#      msiStrArray2String(*props, *kvStr);
 # Workaround
       *kvStr = "";
       foreach(*prop in *props) {
