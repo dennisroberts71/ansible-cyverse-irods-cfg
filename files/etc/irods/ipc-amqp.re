@@ -17,15 +17,10 @@ ipc_amqpSend(*Key, *Msg) {
     *argStr = '*uriArg *ephemeralArg *keyArg *msgArg';
     *status = errorcode(msiExecCmd('amqptopicsend.py', *argStr, ipc_RE_HOST, 'null', 'null', *out));
     if (*status != 0) { 
-      writeLine("serverLog", "Failed to send AMQP message");
-      fail;
-    } else {
       msiGetStderrInExecCmdOut(*out, *errMsg);
-      if (strlen(*errMsg) > 0) {
-        writeLine("serverLog", "Failed to send AMQP message: *errMsg");
-        fail;
-      }
-    }
+      writeLine("serverLog", "Failed to send AMQP message: *errMsg");
+      fail;
+    } 
   }
 }
 

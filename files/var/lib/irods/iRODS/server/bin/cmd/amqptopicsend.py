@@ -52,5 +52,7 @@ try:
     )
 
     connection.close()
+    sys.exit(0)
 except BaseException as e:
-    sys.stderr.write('ERROR: %s\n' % e) 
+    sys.stderr.write('ERROR: %s\n' % e)
+    sys.exit(1)
