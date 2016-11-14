@@ -21,6 +21,8 @@
     - name: verify server_confg.json.j2 expands correctly
       assert:
         that:
+          - server_config.advanced_settings.default_number_of_transfer_threads == irods_default_number_of_transfer_threads
+          - server_config.advanced_settings.transfer_buffer_size_for_parallel_transfer_in_megabytes == irods_parallel_transfer_buffer_size
           - server_config.default_resource_directory == irods_default_resource_directory
           - server_config.default_resource_name == irods_default_resource_name
           - server_config.icat_host == irods_icat_host
@@ -40,6 +42,8 @@
           - irods_environment.irods_cwd == '/iplant/home/' ~ irods_zone_user
           - irods_environment.irods_user_name == irods_zone_user
           - irods_environment.irods_server_control_plane_key == irods_server_control_plane_key
+          - irods_environment.irods_default_number_of_transfer_threads == irods_default_number_of_transfer_threads
+          - irods_environment.irods_transfer_buffer_size_for_parallel_transfer_in_megabytes == irods_parallel_transfer_buffer_size
 
     - name: verify constants expand correctly in ipc_env.re.j2
       assert:

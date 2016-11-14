@@ -1,4 +1,4 @@
-# VERSION: 14
+# VERSION: 15
 #
 # All customizations done to the iRODS rule logic are placed in this file or should be included by
 # this file.
@@ -52,6 +52,10 @@ acDeleteCollByAdminIfPresent(*ParColl, *ChildColl) {
 }
 
 acDataDeletePolicy { ipc_acDataDeletePolicy; }
+
+acSetNumThreads {
+  msiSetNumThreads('default', 'default', 'default');
+}
 
 
 # PRE-PROC RULE HOOKS

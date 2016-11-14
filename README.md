@@ -13,25 +13,27 @@ It is assumed that iRODS 4.1.9 is already installed on the server.
 Role Variables
 --------------
 
-Variable                           | Required | Default                          | Choices | Comments
----------------------------------- | -------- | -------------------------------- | ------- | --------
-`irods_icat_host`                  | no       | localhost                        |         | the FQDN of the IES
-`irods_default_resource_directory` | no       |                                  |         | the absolute path to the vault on the resource server being configured (N/A when configuring IES and it doesn't host a resource)
-`irods_default_resource_name`      | no       | demoResc                         |         | the name of the default resource
-`irods_negotiation_key`            | no       | TEMPORARY_32byte_negotiation_key |         | the negotiation key
-`irods_server_control_plane_key`   | no       | TEMPORARY__32byte_ctrl_plane_key |         | the server control plane key
-`irods_server_port_range_start`    | no       | 20000                            |         | the first address in the range of auxillary TCP and UDP ports
-`irods_server_port_range_end`      | no       | 20199                            |         | the last address in the range of auxillary TCP and UDP ports
-`irods_zone_key`                   | no       | TEMPORARY_zone_key               |         | the zone key
-`irods_zone_user`                  | no       | rods                             |         | the rodsadmin user to be used by the server being configured
-`irods_db`                         | no       |                                  |         | the DBMS connection information, see below (N/A for non-IES resource servers)
-`irods_amqp_uri`                   | no       |                                              the AMQP URI used to connect to the broker (N/A for non-IES resource servers)
-`irods_amqp_host`                  | no       | localhost                        |         | the FQDN of the AMQP broker iRODS publishes to (DEPRECATED: use `irods_amqp_uri instead`)
-`irods_amqp_port`                  | no       | 5672                             |         | the port the AMQP broker listens on (DEPRECATED: use `irods_amqp_uri instead`)
-`irods_amqp_username`              | no       | guest                            |         | the AMQP user iRODS user (DEPRECATED: use `irods_amqp_uri instead`)
-`irods_amqp_password`              | no       | guest                            |         | the password for the AMQP user (DEPRECATED: use `irods_amqp_uri instead`)
-`irods_amqp_ephemeral`             | no       | true                             |         | whether or not the `irods` AMQP exchange will persist when iRODS disconnects from the AMQP broker
-`irods_single_threaded_resources`  | no       | []                               |         | a list of resources that only support single threaded transfers
+Variable                                  | Required | Default                          | Choices | Comments
+----------------------------------------- | -------- | -------------------------------- | ------- | --------
+`irods_icat_host`                         | no       | localhost                        |         | the FQDN of the IES
+`irods_default_number_of_transfer_threads | no       | 4                                |         | the default maximum number of transfer streams for parallel transfer 
+`irods_default_resource_directory`        | no       |                                  |         | the absolute path to the vault on the resource server being configured (N/A when configuring IES and it doesn't host a resource)
+`irods_default_resource_name`             | no       | demoResc                         |         | the name of the default resource
+`irods_negotiation_key`                   | no       | TEMPORARY_32byte_negotiation_key |         | the negotiation key
+`irods_server_control_plane_key`          | no       | TEMPORARY__32byte_ctrl_plane_key |         | the server control plane key
+`irods_parallel_transfer_buffer_size      | no       | 4                                |         | the transfer buffer size in MiB for each stream during parallel transfer
+`irods_server_port_range_start`           | no       | 20000                            |         | the first address in the range of auxillary TCP and UDP ports
+`irods_server_port_range_end`             | no       | 20199                            |         | the last address in the range of auxillary TCP and UDP ports
+`irods_zone_key`                          | no       | TEMPORARY_zone_key               |         | the zone key
+`irods_zone_user`                         | no       | rods                             |         | the rodsadmin user to be used by the server being configured
+`irods_db`                                | no       |                                  |         | the DBMS connection information, see below (N/A for non-IES resource servers)
+`irods_amqp_uri`                          | no       |                                              the AMQP URI used to connect to the broker (N/A for non-IES resource servers)
+`irods_amqp_host`                         | no       | localhost                        |         | the FQDN of the AMQP broker iRODS publishes to (DEPRECATED: use `irods_amqp_uri instead`)
+`irods_amqp_port`                         | no       | 5672                             |         | the port the AMQP broker listens on (DEPRECATED: use `irods_amqp_uri instead`)
+`irods_amqp_username`                     | no       | guest                            |         | the AMQP user iRODS user (DEPRECATED: use `irods_amqp_uri instead`)
+`irods_amqp_password`                     | no       | guest                            |         | the password for the AMQP user (DEPRECATED: use `irods_amqp_uri instead`)
+`irods_amqp_ephemeral`                    | no       | true                             |         | whether or not the `irods` AMQP exchange will persist when iRODS disconnects from the AMQP broker
+`irods_single_threaded_resources`         | no       | []                               |         | a list of resources that only support single threaded transfers
 
 
 `irods_db` fields
