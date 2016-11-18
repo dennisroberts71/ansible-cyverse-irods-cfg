@@ -7,10 +7,15 @@
 ###############################################
 
 BISQUE_GROUPS = list('NEVP', 'sernec')
+BISQUE_ID_ATTR = 'ipc-bisque-id'
+BISQUE_URI_ATTR = 'ipc-bisque-uri'
 
+ 
 logMsg(*Msg) = writeLine('serverLog', 'BISQUE: *Msg')
 
+
 mkURL(*IESHost, *Path) = "irods://" ++ *IESHost ++ *Path
+
 
 # Tells BisQue to create a link for a given user to a data object.
 #
@@ -57,12 +62,14 @@ ln(*IESHost, *Permission, *Client, *Path) {
       *id = substr(*qId, 1, strlen(*qId) - 2);
       msiGetValByKey(*kvs, 'uri', *qURI);
       *uri = substr(*qURI, 1, strlen(*qURI) - 2);
-      msiString2KeyValPair('ipc-bisque-id=*id%ipc-bisque-uri=*uri', *kv);
+      msiString2KeyValPair(BISQUE_ID_ATTR ++ '=' ++ *id ++ '%' BISQUE_URI_ATTR ++ '=' ++ *uri, 
+                           *kv);
       msiSetKeyValuePairsToObj(*kv, *Path, '-d');
       logMsg('linked *Path for *Client with permission *Permission');
     }
   }
 }
+
 
 # Tells BisQue to change the path of a linked data object.
 #
@@ -95,6 +102,7 @@ mv(*IESHost, *Client, *OldPath, *NewPath) {
   }
 }
 
+
 # Tells BisQue to remove a link to data object.
 #
 # bisque_ops.py rm --alias user irods://ies.host/path/to/data.object
@@ -124,7 +132,9 @@ rm(*IESHost, *Client, *Path) {
   }
 }
 
+
 joinPath(*ParentColl, *ObjName) = *ParentColl ++ '/' ++ *ObjName
+
 
 getHomeUser(*Path) =
   let *nodes = split(*Path, '/') 
@@ -133,11 +143,14 @@ getHomeUser(*Path) =
      else let *user = elem(*nodes, 2)     
           in if *user == 'shared' then '' else *user
 
+
 getClient(*Path) =
    let *homeUser = getHomeUser(*Path)
    in if *homeUser == '' then $userNameClient else *homeUser
 
+
 ensureBisqueWritePerm(*Path) = msiSetACL('default', 'write', 'bisque', *Path)
+
 
 ensureBisqueWritePermColl(*Path) {
   logMsg('permitting bisque user RW on *Path');
@@ -145,7 +158,9 @@ ensureBisqueWritePermColl(*Path) {
   msiSetACL('recursive', 'inherit', 'null', *Path);
 }
 
+
 isInGroup(*Group, *Path) = *Path like '/iplant/home/shared/*Group/\*'
+
 
 isInGroups(*Groups, *Path) {
   *result = false;
@@ -161,15 +176,69 @@ isInGroups(*Groups, *Path) {
 isInUser(*Path) = *Path like regex '/iplant/home/[^/]\*/bisque_data($|/.\*)' 
                   && !(*Path like '/iplant/home/shared/\*')
 
-isInBisqueCollection(*Path) = isInUser(*Path) || isInGroups(BISQUE_GROUPS, *Path) 
 
-isForBisque(*Path) = $userNameClient != "bisque" && isInBisqueCollection(*Path)
+isForBisque(*Path) = $userNameClient != "bisque" 
+                     && (isInUser(*Path) || isInGroups(BISQUE_GROUPS, *Path))
+
 
 handleNewObject(*IESHost, *Client, *Path) {
   ensureBisqueWritePerm(*Path);
   *perm = if isInGroups(BISQUE_GROUPS, *Path) then 'published' else 'private';
   ln(*IESHost, *perm, *Client, *Path);
 }
+
+
+stripTrailingSlash(*Path) = if *Path like '*/' then trimr(*Path, '/') else *Path
+
+
+determineSrc(*BaseSrcColl, *BaseDestColl, *DestEntity) = 
+  let *dest = stripTrailingSlash(*DestEntity) in
+    stripTrailingSlash(*BaseSrcColl) ++ 
+      substr(*dest, strlen(stripTrailingSlash(*BaseDestColl)), strlen(*dest))
+
+
+handleCollForBisque(*IESHost, *Client, *SrcColl, *DestColl) {
+  *idAttr = BISQUE_ID_ATTR;
+
+  foreach (*collPat in list(*DestColl, *DestColl ++ '/%')) {
+    foreach (*obj in SELECT COLL_NAME, DATA_NAME WHERE COLL_NAME LIKE '*collPat') {
+      *collName = *obj.COLL_NAME;
+      *dataName = *obj.DATA_NAME;
+
+      foreach (*reg in SELECT COUNT(META_DATA_ATTR_VALUE)
+                       WHERE COLL_NAME = '*collName' 
+                         AND DATA_NAME = '*dataName' 
+                         AND META_DATA_ATTR_NAME = '*idAttr') {
+        *regCnt = *reg.META_DATA_ATTR_VALUE;
+
+        if (*regCnt == '0') {
+          handleNewObject(*IESHost, *Client, joinPath(*obj.COLL_NAME, *obj.DATA_NAME));
+        } else {
+          *srcSubColl = determineSrc(*SrcColl, *DestColl, *obj.COLL_NAME);
+          *srcObj = joinPath(*srcSubColl, *obj.DATA_NAME);
+          *destObj = joinPath(*obj.COLL_NAME, *obj.DATA_NAME);
+          mv(*IESHost, *Client, *srcObj, *destObj);
+        }                  
+      }   
+    }   
+  }
+}
+
+
+mvAll(*IESHost, *Client, *SrcColl, *DestColl) {
+  *idAttr = BISQUE_ID_ATTR;
+
+  foreach(*collPat in list(*DestColl, *DestColl ++ '/%')) {
+    foreach(*row in SELECT COLL_NAME, DATA_NAME
+                    WHERE COLL_NAME LIKE '*collPat' AND META_DATA_ATTR_NAME = '*idAttr') {
+      *srcSubColl = determineSrc(*SrcColl, *DestColl, *row.COLL_NAME);
+      *srcObj = joinPath(*srcSubColl, *row.DATA_NAME);
+      *destObj = joinPath(*row.COLL_NAME, *row.DATA_NAME);
+      mv(*IESHost, *Client, *srcObj, *destObj);
+    }
+  }
+}
+
 
 # Add a call to this rule from inside the acPostProcForCollCreate PEP.
 bisque_acPostProcForCollCreate {
@@ -192,58 +261,42 @@ bisque_acPostProcForCopy(*IESHost) {
   }
 }
 
+
 # Add a call to this rule from inside the acPostProcForObjRename PEP.
 bisque_acPostProcForObjRename(*SrcEntity, *DestEntity, *IESHost) {
-  msiGetObjType(*DestEntity, *type);
   *client = getClient(*SrcEntity);
-  if (isInBisqueCollection(*SrcEntity)) {
-    if (*type == '-c') {
-      # Ensure all immediate member data objects have the correct permissions
-      foreach(*row in SELECT DATA_NAME WHERE COLL_NAME == '*DestEntity') {
-        mv(*IESHost, 
-           *client, 
-           joinPath(*SrcEntity, *row.DATA_NAME), 
-           joinPath(*DestEntity, *row.DATA_NAME));
-      }   
-
-      # Ensure the data objects more deeply nested have the correct permissions
-      *destCollLen = strlen(*DestEntity);
-
-      foreach(*row in SELECT COLL_NAME, DATA_NAME WHERE COLL_NAME LIKE '*DestEntity/%') {
-        *destObj = joinPath(*row.COLL_NAME, *row.DATA_NAME);
-        *srcObj = *SrcEntity ++ substr(*destObj, *destCollLen, strlen(*destObj));
-        mv(*IESHost, *client, *srcObj, *destObj);
-      }
-    } else if (*type == '-d') {
-      mv(*IESHost, *client, *SrcEntity, *DestEntity);
-    }
-  } else if (isForBisque(*DestEntity)) {
-    if (*type == '-c') {
+  msiGetObjType(*DestEntity, *type);
+ 
+  if (*type == '-c') {
+    if (isForBisque(*DestEntity)) {
       ensureBisqueWritePermColl(*DestEntity);
+      handleCollForBisque(*IESHost, *client, *SrcEntity, *DestEntity);
+    } else {
+      mvAll(*IESHost, *client, *SrcEntity, *DestEntity);
+    }
+  } else if (*type == '-d') {
+    msiSplitPath(*DestEntity, *coll, *obj);
+    *idAttr = BISQUE_ID_ATTR;
 
-      # Ensure all member collections have the correct permissions
-      foreach(*row in SELECT COLL_NAME WHERE COLL_NAME LIKE '*DestEntity/%') {
-        ensureBisqueWritePermColl(*row.COLL_NAME);
-      }   
+    foreach (*reg in SELECT COUNT(META_DATA_ATTR_NAME) 
+                       WHERE COLL_NAME = '*coll' 
+                       AND DATA_NAME = '*obj' 
+                       AND META_DATA_ATTR_NAME = '*idAttr') {
+      *regCnt = *reg.META_DATA_ATTR_NAME;
 
-      # Ensure all immediate member data objects have the correct permissions
-      foreach(*row in SELECT DATA_NAME WHERE COLL_NAME == '*DestEntity') {
-        handleNewObject(*IESHost, *client, joinPath(*DestEntity, *row.DATA_NAME));
-      }   
-
-      # Ensure the data objects more deeply nested have the correct permissions
-      foreach(*row in SELECT COLL_NAME, DATA_NAME WHERE COLL_NAME LIKE '*DestEntity/%') {
-        handleNewObject(*IESHost, *client, joinPath(*row.COLL_NAME, *row.DATA_NAME));
+      if (*regCnt != '0') {
+        mv(*IESHost, *client, *SrcEntity, *DestEntity);
+      } else if (isForBisque(*DestEntity)) {
+        handleNewObject(*IESHost, *client, *DestEntity);
       }
-    } else if (*type == '-d') {
-      handleNewObject(*IESHost, *client, *DestEntity);
     }
   }
 }
 
+
 # Add a call to this rule from inside the acPostProcForDelete PEP.
 bisque_acPostProcForDelete(*IESHost) {
-  if (isInBisqueCollection($objPath)) {
+  if (isInUser($objPath) || isInGroups(BISQUE_GROUPS, $objPath)) {
     rm(*IESHost, getClient($objPath), $objPath);
   }
 }
