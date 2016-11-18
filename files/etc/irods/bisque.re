@@ -158,7 +158,7 @@ isInGroups(*Groups, *Path) {
   *result;
 }
 
-isInUser(*Path) = *Path like regex '/iplant/home/[^/]\*/bisque_data/.\*' 
+isInUser(*Path) = *Path like regex '/iplant/home/[^/]\*/bisque_data($|/.\*)' 
                   && !(*Path like '/iplant/home/shared/\*')
 
 isInBisqueCollection(*Path) = isInUser(*Path) || isInGroups(BISQUE_GROUPS, *Path) 
