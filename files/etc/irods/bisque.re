@@ -62,7 +62,7 @@ ln(*IESHost, *Permission, *Client, *Path) {
       *id = substr(*qId, 1, strlen(*qId) - 2);
       msiGetValByKey(*kvs, 'uri', *qURI);
       *uri = substr(*qURI, 1, strlen(*qURI) - 2);
-      msiString2KeyValPair(BISQUE_ID_ATTR ++ '=' ++ *id ++ '%' BISQUE_URI_ATTR ++ '=' ++ *uri, 
+      msiString2KeyValPair(BISQUE_ID_ATTR ++ '=' ++ *id ++ '%' ++ BISQUE_URI_ATTR ++ '=' ++ *uri,
                            *kv);
       msiSetKeyValuePairsToObj(*kv, *Path, '-d');
       logMsg('linked *Path for *Client with permission *Permission');
@@ -173,6 +173,7 @@ isInGroups(*Groups, *Path) {
   *result;
 }
 
+
 isInUser(*Path) = *Path like regex '/iplant/home/[^/]\*/bisque_data($|/.\*)' 
                   && !(*Path like '/iplant/home/shared/\*')
 
@@ -247,12 +248,14 @@ bisque_acPostProcForCollCreate {
   }   
 }
 
+
 # Add a call to this rule from inside the acPostProcForPut PEP. 
 bisque_acPostProcForPut(*IESHost) {
   if (isForBisque($objPath)) {
     handleNewObject(*IESHost, getClient($objPath), $objPath);
   }
 }
+
 
 # Add a call to this rule from inside the acPostProcForCopy PEP.
 bisque_acPostProcForCopy(*IESHost) {
