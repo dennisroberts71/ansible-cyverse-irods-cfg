@@ -198,46 +198,18 @@ determineSrc(*BaseSrcColl, *BaseDestColl, *DestEntity) =
       substr(*dest, strlen(stripTrailingSlash(*BaseDestColl)), strlen(*dest))
 
 
-handleCollForBisque(*IESHost, *Client, *SrcColl, *DestColl) {
+isInBisque(*CollName, *DataName) {
+  *inBisque = false;
   *idAttr = BISQUE_ID_ATTR;
 
-  foreach (*collPat in list(*DestColl, *DestColl ++ '/%')) {
-    foreach (*obj in SELECT COLL_NAME, DATA_NAME WHERE COLL_NAME LIKE '*collPat') {
-      *collName = *obj.COLL_NAME;
-      *dataName = *obj.DATA_NAME;
-
-      foreach (*reg in SELECT COUNT(META_DATA_ATTR_VALUE)
-                       WHERE COLL_NAME = '*collName' 
-                         AND DATA_NAME = '*dataName' 
-                         AND META_DATA_ATTR_NAME = '*idAttr') {
-        *regCnt = *reg.META_DATA_ATTR_VALUE;
-
-        if (*regCnt == '0') {
-          handleNewObject(*IESHost, *Client, joinPath(*obj.COLL_NAME, *obj.DATA_NAME));
-        } else {
-          *srcSubColl = determineSrc(*SrcColl, *DestColl, *obj.COLL_NAME);
-          *srcObj = joinPath(*srcSubColl, *obj.DATA_NAME);
-          *destObj = joinPath(*obj.COLL_NAME, *obj.DATA_NAME);
-          mv(*IESHost, *Client, *srcObj, *destObj);
-        }                  
-      }   
-    }   
+  foreach (*reg in SELECT COUNT(META_DATA_ATTR_VALUE)
+                   WHERE COLL_NAME = '*CollName' 
+                     AND DATA_NAME = '*DataName' 
+                     AND META_DATA_ATTR_NAME = '*idAttr') {
+    *inBisque = *reg.META_DATA_ATTR_VALUE != '0';
   }
-}
 
-
-mvAll(*IESHost, *Client, *SrcColl, *DestColl) {
-  *idAttr = BISQUE_ID_ATTR;
-
-  foreach(*collPat in list(*DestColl, *DestColl ++ '/%')) {
-    foreach(*row in SELECT COLL_NAME, DATA_NAME
-                    WHERE COLL_NAME LIKE '*collPat' AND META_DATA_ATTR_NAME = '*idAttr') {
-      *srcSubColl = determineSrc(*SrcColl, *DestColl, *row.COLL_NAME);
-      *srcObj = joinPath(*srcSubColl, *row.DATA_NAME);
-      *destObj = joinPath(*row.COLL_NAME, *row.DATA_NAME);
-      mv(*IESHost, *Client, *srcObj, *destObj);
-    }
-  }
+  *inBisque;
 }
 
 
@@ -268,30 +240,36 @@ bisque_acPostProcForCopy(*IESHost) {
 # Add a call to this rule from inside the acPostProcForObjRename PEP.
 bisque_acPostProcForObjRename(*SrcEntity, *DestEntity, *IESHost) {
   *client = getClient(*SrcEntity);
+  *forBisque = isForBisque(*DestEntity);
   msiGetObjType(*DestEntity, *type);
  
   if (*type == '-c') {
-    if (isForBisque(*DestEntity)) {
+    if (*forBisque) {
       ensureBisqueWritePermColl(*DestEntity);
-      handleCollForBisque(*IESHost, *client, *SrcEntity, *DestEntity);
-    } else {
-      mvAll(*IESHost, *client, *SrcEntity, *DestEntity);
+    }
+
+    foreach (*collPat in list(*DestEntity, *DestEntity ++ '/%')) {
+      foreach (*obj in SELECT COLL_NAME, DATA_NAME WHERE COLL_NAME LIKE '*collPat') {
+        *collName = *obj.COLL_NAME;
+        *dataName = *obj.DATA_NAME;
+
+        if (isInBisque(*collName, *dataName)) {
+          *srcSubColl = determineSrc(*SrcEntity, *DestEntity, *collName);
+          *srcObj = joinPath(*srcSubColl, *dataName);
+          *destObj = joinPath(*collName, *dataName);
+          mv(*IESHost, *client, *srcObj, *destObj);
+        } else if (*forBisque) {
+          handleNewObject(*IESHost, *client, joinPath(*collName, *dataName));
+        }   
+      }   
     }
   } else if (*type == '-d') {
-    msiSplitPath(*DestEntity, *coll, *obj);
-    *idAttr = BISQUE_ID_ATTR;
+    msiSplitPath(*DestEntity, *collName, *dataName);
 
-    foreach (*reg in SELECT COUNT(META_DATA_ATTR_NAME) 
-                       WHERE COLL_NAME = '*coll' 
-                       AND DATA_NAME = '*obj' 
-                       AND META_DATA_ATTR_NAME = '*idAttr') {
-      *regCnt = *reg.META_DATA_ATTR_NAME;
-
-      if (*regCnt != '0') {
-        mv(*IESHost, *client, *SrcEntity, *DestEntity);
-      } else if (isForBisque(*DestEntity)) {
-        handleNewObject(*IESHost, *client, *DestEntity);
-      }
+    if (isInBisque(*collName, *dataName)) {
+      mv(*IESHost, *client, *SrcEntity, *DestEntity);
+    } else if (*forBisque) {
+      handleNewObject(*IESHost, *client, *DestEntity);
     }
   }
 }
