@@ -1,4 +1,4 @@
-# VERSION 2
+# VERSION 3
 #
 # bisque.re  
 # Bisque related rules for > iRods 4.0
@@ -215,7 +215,7 @@ isInBisque(*CollName, *DataName) {
 
 # Add a call to this rule from inside the acPostProcForCollCreate PEP.
 bisque_acPostProcForCollCreate {
-  if ($collName like regex "/iplant/home/[^/]\*/bisque_data") {
+  if (isForBisque($collName)) {
     ensureBisqueWritePermColl($collName);
   }   
 }
