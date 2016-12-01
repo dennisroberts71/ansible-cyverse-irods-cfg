@@ -154,8 +154,7 @@ ensureBisqueWritePerm(*Path) = msiSetACL('default', 'write', 'bisque', *Path)
 
 ensureBisqueWritePermColl(*Path) {
   logMsg('permitting bisque user RW on *Path');
-  ensureBisqueWritePerm(*Path);
-  msiSetACL('recursive', 'inherit', 'null', *Path);
+  msiSetACL('recursive', 'write', 'bisque', *Path);
 }
 
 
