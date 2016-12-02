@@ -1,4 +1,4 @@
-# VERSION: 15
+# VERSION: 16
 #
 # All customizations done to the iRODS rule logic are placed in this file or should be included by
 # this file.
@@ -24,6 +24,7 @@
 
 @include "bisque"
 @include "coge"
+@include "sernec"
 
 
 # POLICIES
@@ -109,6 +110,9 @@ acPostProcForCopy {
 
   *err = errormsg(bisque_acPostProcForCopy(ipc_RE_HOST), *msg);
   if (*err < 0) { writeLine("serverLog", *msg); }
+
+  *err = errormsg(sernec_acPostProcForCopy, *msg);
+  if (*err < 0) { writeLine("serverLog", *msg); }
 }
 
 acPostProcForCollCreate { 
@@ -119,6 +123,9 @@ acPostProcForCollCreate {
   if (*err < 0) { writeLine("serverLog", *msg); }
 
   *err = errormsg(coge_acPostProcForCollCreate, *msg);
+  if (*err < 0) { writeLine("serverLog", *msg); }
+
+  *err = errormsg(sernec_acPostProcForCollCreate, *msg);
   if (*err < 0) { writeLine("serverLog", *msg); }
 }
 
@@ -140,6 +147,9 @@ acPostProcForObjRename(*SourceObject, *DestObject) {
   if (*err < 0) { writeLine("serverLog", *msg); }
 
   *err = errormsg(coge_acPostProcForObjRename(*SourceObject, *DestObject), *msg);
+  if (*err < 0) { writeLine("serverLog", *msg); }
+
+  *err = errormsg(sernec_acPostProcForObjRename(*SourceObject, *DestObject), *msg);
   if (*err < 0) { writeLine("serverLog", *msg); }
 }
 

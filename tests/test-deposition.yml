@@ -24,6 +24,8 @@
         - ipc-logic.re
         - ipc-uuid.re
         - ipc-env.re
+        - sernec.re
+        - sernec-env.re
         - server_config.json
 
     - name: Verify database_config.json is in place

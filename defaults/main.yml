@@ -1,5 +1,4 @@
 ---
-
 irods_icat_host: localhost
 irods_default_number_of_transfer_threads: 4
 irods_default_resource_name: demoResc
@@ -29,3 +28,7 @@ irods_db:
   password: testpassword
                                                 
 irods_single_threaded_resources: []
+
+irods_sernec_owners: []
+irods_sernec_writers: []
+irods_sernec_readers: [] 

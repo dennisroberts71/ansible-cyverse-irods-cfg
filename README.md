@@ -34,6 +34,9 @@ Variable                                  | Required | Default                  
 `irods_amqp_password`                     | no       | guest                            |         | the password for the AMQP user (DEPRECATED: use `irods_amqp_uri instead`)
 `irods_amqp_ephemeral`                    | no       | true                             |         | whether or not the `irods` AMQP exchange will persist when iRODS disconnects from the AMQP broker
 `irods_single_threaded_resources`         | no       | []                               |         | a list of resources that only support single threaded transfers
+`irods_sernec_owners`                     | no       | []                               |         | a list of users who get ownership of sernec collections
+`irods_sernec_writers`                    | no       | []                               |         | a list of users who get write access to sernec collections
+`irods_sernec_readers`                    | no       | []                               |         | a list of users who get read access to sernec collections
 
 
 `irods_db` fields

@@ -35,3 +35,8 @@
     dest: /etc/irods/ipc-env.re
     owner: irods
 
+- name: place sernec-env.re
+  template:
+    src: etc/irods/sernec-env.re.j2
+    dest: /etc/irods/sernec-env.re
+    owner: irods
