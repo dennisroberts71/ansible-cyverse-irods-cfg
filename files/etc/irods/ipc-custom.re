@@ -6,7 +6,6 @@
 # The environment specific rule customizations belong in the file ipc-env.re.  These rules have the
 # highest priority.  Implementations in ipc-custom.re of rules also in ipc-env.re will be ignored.
 
-@include "aegis"
 @include "ipc-env"
 
 # All iplant specific, environment independent logic goes in the file ipc-logic.re.  These rules
@@ -22,6 +21,7 @@
 # Third party rule logic should be implemented in a rule prefixed with the name of the rule file
 # and suffixed with the name of the rule hook that will call the custome rule.
 
+@include "aegis"
 @include "bisque"
 @include "coge"
 @include "sernec"
@@ -58,9 +58,21 @@ acSetNumThreads {
   msiSetNumThreads('default', 'default', 'default');
 }
 
-acSetRescSchemeForCreate { ipc_acSetRescSchemeForCreate; }
+acSetRescSchemeForCreate { 
+  *err = errormsg(ipc_acSetRescSchemeForCreate, *msg);
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
-acSetRescSchemeForRepl { ipc_acSetRescSchemeForRepl; }
+  *err = errormsg(aegis_acSetRescSchemeForCreate, *msg);
+  if (*err < 0) { writeLine('serverLog', *msg); }
+}
+
+acSetRescSchemeForRepl { 
+  *err = errormsg(ipc_acSetRescSchemeForRepl, *msg);
+  if (*err < 0) { writeLine('serverLog', *msg); }
+
+  *err = errormsg(aegis_acSetRescSchemeForRepl, *msg);
+  if (*err < 0) { writeLine('serverLog', *msg); }
+}
 
 
 # PRE-PROC RULE HOOKS
