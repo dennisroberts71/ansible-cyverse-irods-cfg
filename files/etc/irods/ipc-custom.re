@@ -1,4 +1,4 @@
-# VERSION: 16
+# VERSION: 17
 #
 # All customizations done to the iRODS rule logic are placed in this file or should be included by
 # this file.
@@ -6,7 +6,7 @@
 # The environment specific rule customizations belong in the file ipc-env.re.  These rules have the
 # highest priority.  Implementations in ipc-custom.re of rules also in ipc-env.re will be ignored.
 
-@include "aegis-env"
+@include "aegis"
 @include "ipc-env"
 
 # All iplant specific, environment independent logic goes in the file ipc-logic.re.  These rules

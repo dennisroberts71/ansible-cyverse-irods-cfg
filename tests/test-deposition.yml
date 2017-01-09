@@ -5,6 +5,11 @@
   pre_tasks:
     - include: tasks/clean.yml
 
+    - name: place aegis-env.re
+      file:
+        path: /etc/irods/aegis-env.re
+        state: touch
+
   roles:
     - ../../ansible-cyverse-irods-cfg
 
@@ -15,7 +20,7 @@
       register: response
       failed_when: not response.stat.exists
       with_items:
-        - aegis-env.re
+        - aegis.re
         - bisque.re
         - coge.re
         - ipc-amqp.re
@@ -27,6 +32,12 @@
         - sernec.re
         - sernec-env.re
         - server_config.json
+
+    - name: Verify aegis-env.re doesn't exist
+      stat:
+        path: /etc/irods/aegis-env.re
+      register: response
+      failed_when: response.stat.exists
 
     - name: Verify database_config.json is in place
       stat:
