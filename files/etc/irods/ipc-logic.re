@@ -1,4 +1,4 @@
-# VERSION: 20
+# VERSION: 21
 #
 # The iPLANT specific, environment idependent rule customizations.
 #
@@ -365,6 +365,18 @@ cpUnprotectedUserAVUs(*User, *TargetType, *TargetName) =
     setAVUIfUnprotected(*TargetType, *TargetName, *avu.META_RESC_ATTR_NAME,
                         *avu.META_RESC_ATTR_VALUE, *avu.META_RESC_ATTR_UNITS);
   }
+
+
+# This rule makes ensures that the correct resource is used when for newly created files when one
+# isn't explicitly chosen.
+#
+ipc_acSetRescSchemeForCreate { msiSetDefaultResc(ipc_DEFAULT_RESC, 'preferred'); }
+
+
+# This rule makes ensures that the correct resource is used when for replicas when one isn't 
+# explicitly chosen.
+#
+ipc_acSetRescSchemeForRepl { msiSetDefaultResc(ipc_DEFAULT_RESC, 'preferred'); }
 
 
 # This rule makes the admin group owner of a collection when a collection is created by an

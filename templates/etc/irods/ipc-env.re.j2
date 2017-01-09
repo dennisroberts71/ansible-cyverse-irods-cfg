@@ -11,6 +11,9 @@ ipc_IES_IP = '{{ lookup("dig", irods_icat_host) }}'
 ipc_RE_HOST = '{{ irods_icat_host }}'
 ipc_RODSADMIN = '{{ irods_zone_user }}'
 
+ipc_DEFAULT_RESC = '{{ irods_default_resource_name }}'
+
+
 acSetNumThreads {
 {% for resc in irods_single_threaded_resources %}
   ON($rescName == '{{ resc }}' && $clientAddr == ipc_IES_IP) { 
@@ -21,8 +24,4 @@ acSetNumThreads {
     msiSetNumThreads('default', '16', 'default');
   }
 }
-
-acSetRescSchemeForCreate { msiSetDefaultResc('{{ irods_default_resource_name }}', 'preferred'); }
-
-acSetRescSchemeForRepl { msiSetDefaultResc('{{ irods_default_resource_name }}', 'preferred'); }
 

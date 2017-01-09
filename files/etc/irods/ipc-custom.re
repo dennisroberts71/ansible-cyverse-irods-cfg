@@ -58,6 +58,10 @@ acSetNumThreads {
   msiSetNumThreads('default', 'default', 'default');
 }
 
+acSetRescSchemeForCreate { ipc_acSetRescSchemeForCreate; }
+
+acSetRescSchemeForRepl { ipc_acSetRescSchemeForRepl; }
+
 
 # PRE-PROC RULE HOOKS
 #
