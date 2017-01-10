@@ -272,29 +272,37 @@ removePrefix(*orig, *prefixes) {
   *result;
 }
 
-# A common rule for put and copy actions.  Requires $writeFlag and $objPath to be set.
+# The logic for handling a newly created data object.
 #
-createOrOverwrite { 
-  *err = errormsg(ensureAdminOwner($objPath), *msg);
+createData(*Path) {
+  *err = errormsg(ensureAdminOwner(*Path), *msg);
   if (*err < 0) { writeLine('serverLog', *msg); }
   
-  *err = errormsg(msiDataObjChksum($objPath, 'forceChksum=', *chksum), *msg);
+  *err = errormsg(msiDataObjChksum(*Path, 'forceChksum=', *chksum), *msg);
   if (*err < 0) { writeLine('serverLog', *msg); }
   
-  if ($writeFlag == 0) { 
-    *err = errormsg(sendDataObjectAdd(assignUUID('-d', $objPath)), *msg);
+  *err = errormsg(sendDataObjectAdd(assignUUID('-d', *Path)), *msg);
+  if (*err < 0) { writeLine('serverLog', *msg); }
+}
+
+# The logic for handling a modified data object.
+#
+modifyData(*Path) {
+  *err = errormsg(ensureAdminOwner(*Path), *msg);
+  if (*err < 0) { writeLine('serverLog', *msg); }
+  
+  *err = errormsg(msiDataObjChksum(*Path, 'forceChksum=', *chksum), *msg);
+  if (*err < 0) { writeLine('serverLog', *msg); }
+  
+  *uuid = retrieveDataUUID(*Path);
+
+  if (*uuid != '') {
+    *err = errormsg(sendDataObjectMod(*uuid), *msg);
     if (*err < 0) { writeLine('serverLog', *msg); }
   } else {
-    *uuid = retrieveDataUUID($objPath);
-
-    if (*uuid != '') {
-      *err = errormsg(sendDataObjectMod(*uuid), *msg);
-      if (*err < 0) { writeLine('serverLog', *msg); }
-    } else {
-      *err = errormsg(sendDataObjectAdd(assignUUID('-d', $objPath)), *msg);
-      if (*err < 0) { writeLine('serverLog', *msg); }
-    } 
-  }
+    *err = errormsg(sendDataObjectAdd(assignUUID('-d', *Path)), *msg);
+    if (*err < 0) { writeLine('serverLog', *msg); }
+  } 
 }
 
 # Indicates whether or not an AVU is protected
@@ -492,13 +500,24 @@ ipc_acPostProcForObjRename(*SrcEntity, *DestEntity) {
 # delayed replication for files added to /iplant/home to TACC
 #
 ipc_acPostProcForPut {
-  createOrOverwrite;
+  if ($writeFlag == 0) {
+    createData($objPath); 
+  } else {
+    modifyData($objPath);
+  }
 }
 
 # This rule sends a data object copied message to the message exchange for the data object being
 # copied. If the target data object already exists, a data object modified message will be sent
 # instead.
-ipc_acPostProcForCopy { createOrOverwrite; }
+#
+ipc_acPostProcForCopy { 
+  if ($writeFlag == 0) {
+    createData($objPath); 
+  } else {
+    modifyData($objPath);
+  }
+}
 
 # This rule checks that AVU being modified isn't a protected one.
 ipc_acPreProcForModifyAVUMetadata(*Option, *ItemType, *ItemName, *AName, *AValue, *New1, *New2,
