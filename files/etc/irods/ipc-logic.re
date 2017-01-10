@@ -3,11 +3,11 @@
 # The iPLANT specific, environment idependent rule customizations.
 #
 # These rules will be called by the hooks implemented in ipc-custom.re.  The rule names should be
-# prefixed with "ipc" and suffixed with the name of the rule hook that will call the custom rule.
+# prefixed with 'ipc' and suffixed with the name of the rule hook that will call the custom rule.
 
-@include "ipc-amqp"
-@include "ipc-json"
-@include "ipc-uuid"
+@include 'ipc-amqp'
+@include 'ipc-json'
+@include 'ipc-uuid'
 
 COLLECTION_TYPE = 'collection'
 DATA_OBJECT_TYPE = 'data-object'
@@ -28,8 +28,8 @@ contains(*item, *list) {
 # Assign a UUID to a given collection or data object. 
 assignUUID(*ItemType, *ItemName) {
   *uuid = ipc_uuidGenerate;
-  writeLine("serverLog", "UUID *uuid created");
-  msiSetAVU(*ItemType, *ItemName, "ipc_UUID", *uuid, "");
+  writeLine('serverLog', 'UUID *uuid created');
+  msiSetAVU(*ItemType, *ItemName, 'ipc_UUID', *uuid, '');
   *uuid;
 }
 
@@ -232,8 +232,8 @@ canModProtectedAVU(*User) {
 #
 getOrigUnit(*candidate) =
   if strlen(*candidate) < 2 then *candidate
-  else if substr(*candidate, 1, 1) != ":" then *candidate
-  else "";
+  else if substr(*candidate, 1, 1) != ':' then *candidate
+  else '';
 
 # Gets the new AVU setting from a list of candidates. New AVU settings are passed in an arbitrary
 # order and the type of AVU setting is identified by a prefix. This function looks for values
@@ -276,23 +276,23 @@ removePrefix(*orig, *prefixes) {
 #
 createOrOverwrite { 
   *err = errormsg(ensureAdminOwner($objPath), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
   
-  *err = errormsg(msiDataObjChksum($objPath, "forceChksum=", *chksum), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  *err = errormsg(msiDataObjChksum($objPath, 'forceChksum=', *chksum), *msg);
+  if (*err < 0) { writeLine('serverLog', *msg); }
   
   if ($writeFlag == 0) { 
     *err = errormsg(sendDataObjectAdd(assignUUID('-d', $objPath)), *msg);
-    if (*err < 0) { writeLine("serverLog", *msg); }
+    if (*err < 0) { writeLine('serverLog', *msg); }
   } else {
     *uuid = retrieveDataUUID($objPath);
 
     if (*uuid != '') {
       *err = errormsg(sendDataObjectMod(*uuid), *msg);
-      if (*err < 0) { writeLine("serverLog", *msg); }
+      if (*err < 0) { writeLine('serverLog', *msg); }
     } else {
       *err = errormsg(sendDataObjectAdd(assignUUID('-d', $objPath)), *msg);
-      if (*err < 0) { writeLine("serverLog", *msg); }
+      if (*err < 0) { writeLine('serverLog', *msg); }
     } 
   }
 }
@@ -387,10 +387,10 @@ ipc_acCreateCollByAdmin(*ParColl, *ChildColl) {
   *Coll = '*ParColl/*ChildColl';
 
   *err = errormsg(msiSetACL('default', 'admin:own', 'rodsadmin', *Coll), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(sendCollectionAdd(assignUUID('-c', *Coll), *Coll), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
 # This rule pushes a collection.rm message into the irods exchange.
@@ -418,23 +418,23 @@ ipc_acPreProcForModifyAccessControl(*RecursiveFlag, *AccessLevel, *UserName, *Zo
 #
 ipc_acPostProcForCollCreate { 
   *err = errormsg(ensureAdminOwner($collName), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
   
   *err = errormsg(sendCollectionAdd(assignUUID('-c', $collName), $collName), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
-ipc_acPreprocForRmColl { temporaryStorage."$collName" = retrieveCollectionUUID($collName); }
+ipc_acPreprocForRmColl { temporaryStorage.'$collName' = retrieveCollectionUUID($collName); }
 
 ipc_acPostProcForRmColl {
-  *uuid = temporaryStorage."$collName";
+  *uuid = temporaryStorage.'$collName';
   if (*uuid != '') { sendEntityRemove(COLLECTION_TYPE, *uuid, $collName); }
 }
 
-ipc_acDataDeletePolicy { temporaryStorage."$objPath" = retrieveDataUUID($objPath); }
+ipc_acDataDeletePolicy { temporaryStorage.'$objPath' = retrieveDataUUID($objPath); }
 
 ipc_acPostProcForDelete {
-  *uuid = temporaryStorage."$objPath";
+  *uuid = temporaryStorage.'$objPath';
   if (*uuid != '') { sendEntityRemove(DATA_OBJECT_TYPE, *uuid, $objPath); }
 }
 
@@ -443,10 +443,10 @@ ipc_acPostProcForDelete {
 #
 ipc_acPostProcForTarFileReg {
   *err = errormsg(ensureAdminOwner($objPath), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
   
   *err = errormsg(sendDataObjectAdd(assignUUID('-d', $objPath)), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
 # This sends a collection or data-object ACL modification message for the updated object.
@@ -507,9 +507,9 @@ ipc_acPreProcForModifyAVUMetadata(*Option, *ItemType, *ItemName, *AName, *AValue
 
   # Determine the original unit and the new AVU settings.
   *origUnit = getOrigUnit(*New1);
-  *newName = getNewAVUSetting(*AName, "n:", *newArgs);
-  *newValue = getNewAVUSetting(*AValue, "v:", *newArgs);
-  *newUnit = getNewAVUSetting(*origUnit, "u:", *newArgs);
+  *newName = getNewAVUSetting(*AName, 'n:', *newArgs);
+  *newValue = getNewAVUSetting(*AValue, 'v:', *newArgs);
+  *newUnit = getNewAVUSetting(*origUnit, 'u:', *newArgs);
   
   ensureAVUEditable(*ItemType, *ItemName, *AName, *AValue, *origUnit);
   ensureAVUEditable(*ItemType, *ItemName, *newName, *newValue, *newUnit);
@@ -538,7 +538,7 @@ ipc_acPreProcForModifyAVUMetadata(*Option, *SourceItemType, *TargetItemType, *So
 
     # fail to prevent iRODS from also copying the protected metadata
     cut;
-    failmsg(0, "IPLANT SUCCESS:  Successfully copied the unprotected metadata.");
+    failmsg(0, 'IPLANT SUCCESS:  Successfully copied the unprotected metadata.');
   }
 }
 
@@ -552,9 +552,9 @@ ipc_acPostProcForModifyAVUMetadata(*Option, *ItemType, *ItemName, *AName, *AValu
 
     # Determine the original unit and the new AVU settings.
     *origUnit = getOrigUnit(*new1);
-    *newName = getNewAVUSetting(*AName, "n:", *newArgs);
-    *newValue = getNewAVUSetting(*AValue, "v:", *newArgs);
-    *newUnit = getNewAVUSetting(*origUnit, "u:", *newArgs);
+    *newName = getNewAVUSetting(*AName, 'n:', *newArgs);
+    *newValue = getNewAVUSetting(*AValue, 'v:', *newArgs);
+    *newUnit = getNewAVUSetting(*origUnit, 'u:', *newArgs);
   
     # Send AVU modified message.
     sendAvuMod(*ItemType, *uuid, *AName, *AValue, *origUnit, *newName, *newValue, *newUnit);
@@ -565,14 +565,14 @@ ipc_acPostProcForModifyAVUMetadata(*Option, *ItemType, *ItemName, *AName, *AValu
 #
 ipc_acPostProcForModifyAVUMetadata(*Option, *ItemType, *ItemName, *AName, *AValue, *AUnit) {
   if (*AName != 'ipc_UUID') {
-    if (contains(*Option, list("add", "adda", "rm", "set"))) {
+    if (contains(*Option, list('add', 'adda', 'rm', 'set'))) {
       *uuid = retrieveUUID(*ItemType, *ItemName);
       if (*uuid != '') {
         sendAvuSet(*Option, *ItemType, *uuid, *AName, *AValue, *AUnit);
       }
-    } else if (*Option == "addw") {
+    } else if (*Option == 'addw') {
       sendAvuMultiset(*ItemName, *AName, *AValue, *AUnit);
-    } else if (*Option == "rmw") {
+    } else if (*Option == 'rmw') {
       *uuid = retrieveUUID(*ItemType, *ItemName);
       if (*uuid != '') {
         sendAvuMultiremove(*ItemType, *uuid, *AName, *AValue, *AUnit)
