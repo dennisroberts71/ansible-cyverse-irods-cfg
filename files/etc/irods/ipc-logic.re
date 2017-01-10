@@ -449,13 +449,7 @@ ipc_acPostProcForDelete {
 # This rule makes the admin owner of any data object extracted from a TAR file. It also sends an
 # data objected added message for each data object in the TAR file.
 #
-ipc_acPostProcForTarFileReg {
-  *err = errormsg(ensureAdminOwner($objPath), *msg);
-  if (*err < 0) { writeLine('serverLog', *msg); }
-  
-  *err = errormsg(sendDataObjectAdd(assignUUID('-d', $objPath)), *msg);
-  if (*err < 0) { writeLine('serverLog', *msg); }
-}
+ipc_acPostProcForTarFileReg { createData($objPath); }
 
 # This sends a collection or data-object ACL modification message for the updated object.
 #
@@ -496,8 +490,7 @@ ipc_acPostProcForObjRename(*SrcEntity, *DestEntity) {
 }
 
 # This rule ensures that a checksum is computed for every uploaded data object. It also sends
-# data object changes messages to the irods topic exchange and performs a
-# delayed replication for files added to /iplant/home to TACC
+# data object changes messages to the irods topic exchange.
 #
 ipc_acPostProcForPut {
   if ($writeFlag == 0) {
