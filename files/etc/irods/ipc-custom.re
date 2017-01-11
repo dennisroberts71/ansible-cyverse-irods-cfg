@@ -6,13 +6,13 @@
 # The environment specific rule customizations belong in the file ipc-env.re.  These rules have the
 # highest priority.  Implementations in ipc-custom.re of rules also in ipc-env.re will be ignored.
 
-@include "ipc-env"
+@include 'ipc-env'
 
 # All iplant specific, environment independent logic goes in the file ipc-logic.re.  These rules
 # will be called by the hooks implemented in ipc-custom.re.  The rule names should be prefixed with
-# "ipc" and suffixed with the name of the rule hook that will call the custom rule.
+# 'ipc' and suffixed with the name of the rule hook that will call the custom rule.
 
-@include "ipc-logic"
+@include 'ipc-logic'
 
 
 # THIRD PARTY RULES
@@ -21,16 +21,16 @@
 # Third party rule logic should be implemented in a rule prefixed with the name of the rule file
 # and suffixed with the name of the rule hook that will call the custome rule.
 
-@include "aegis"
-@include "bisque"
-@include "coge"
-@include "sernec"
+@include 'aegis'
+@include 'bisque'
+@include 'coge'
+@include 'sernec'
 
 
 # POLICIES
 
-acBulkPutPostProcPolicy { msiSetBulkPutPostProcPolicy("on"); }
-acSetReServerNumProc { msiSetReServerNumProc("4"); }
+acBulkPutPostProcPolicy { msiSetBulkPutPostProcPolicy('on'); }
+acSetReServerNumProc { msiSetReServerNumProc('4'); }
 
 acCreateCollByAdmin(*ParColl, *ChildColl) {
   msiCreateCollByAdmin(*ParColl, *ChildColl);
@@ -44,7 +44,7 @@ acDeleteCollByAdmin(*ParColl, *ChildColl) {
 
 acDeleteCollByAdminIfPresent(*ParColl, *ChildColl) {
   *status = errormsg(ipc_acDeleteCollByAdmin(*ParColl, *ChildColl), *msg);
-  if(*status < 0) { writeLine("serverLog", *msg); }
+  if(*status < 0) { writeLine('serverLog', *msg); }
 
   *status = errormsg(msiDeleteCollByAdmin(*ParColl, *ChildColl),*msg);
   if(*status != 0 && *status != -808000) {
@@ -114,59 +114,59 @@ acPreprocForRmColl { ipc_acPreprocForRmColl; }
 
 acPostProcForPut { 
   *err = errormsg(ipc_acPostProcForPut, *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(bisque_acPostProcForPut(ipc_RE_HOST), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
 acPostProcForCopy {
   *err = errormsg(ipc_acPostProcForCopy, *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(bisque_acPostProcForCopy(ipc_RE_HOST), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(sernec_acPostProcForCopy, *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
 acPostProcForCollCreate { 
   *err = errormsg(ipc_acPostProcForCollCreate, *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(bisque_acPostProcForCollCreate, *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(coge_acPostProcForCollCreate, *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(sernec_acPostProcForCollCreate, *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
 acPostProcForRmColl { ipc_acPostProcForRmColl; }
 
 acPostProcForDelete {
   *err = errormsg(ipc_acPostProcForDelete, *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(bisque_acPostProcForDelete(ipc_RE_HOST), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
 acPostProcForObjRename(*SourceObject, *DestObject) {
   *err = errormsg(ipc_acPostProcForObjRename(*SourceObject, *DestObject), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(bisque_acPostProcForObjRename(*SourceObject, *DestObject, ipc_RE_HOST), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(coge_acPostProcForObjRename(*SourceObject, *DestObject), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 
   *err = errormsg(sernec_acPostProcForObjRename(*SourceObject, *DestObject), *msg);
-  if (*err < 0) { writeLine("serverLog", *msg); }
+  if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
 acPostProcForTarFileReg { ipc_acPostProcForTarFileReg; }
