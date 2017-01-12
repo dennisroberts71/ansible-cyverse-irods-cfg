@@ -446,10 +446,10 @@ ipc_acPostProcForDelete {
   if (*uuid != '') { sendEntityRemove(DATA_OBJECT_TYPE, *uuid, $objPath); }
 }
 
-# This rule makes the admin owner of any data object extracted from a TAR file. It also sends an
-# data objected added message for each data object in the TAR file.
+# This rule redirects to the put rule to ensure that other rule sets get called correctly on files
+# extracted from bundles.
 #
-ipc_acPostProcForTarFileReg { createData($objPath); }
+ipc_acPostProcForTarFileReg { acPostProcForPut; }
 
 # This sends a collection or data-object ACL modification message for the updated object.
 #
