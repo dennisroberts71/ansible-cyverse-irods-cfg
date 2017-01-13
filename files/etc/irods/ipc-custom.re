@@ -169,7 +169,10 @@ acPostProcForObjRename(*SourceObject, *DestObject) {
   if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
-acPostProcForTarFileReg { ipc_acPostProcForTarFileReg; }
+# This rule redirects to the put rule to ensure that all rule sets get called correctly on files
+# extracted from bundles.
+#
+acPostProcForTarFileReg { acPostProcForPut; }
 
 acPostProcForModifyAccessControl(*RecursiveFlag, *AccessLevel, *UserName, *Zone, *Path) {
   ipc_acPostProcForModifyAccessControl(*RecursiveFlag, *AccessLevel, *UserName, *Zone, *Path);

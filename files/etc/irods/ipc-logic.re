@@ -446,11 +446,6 @@ ipc_acPostProcForDelete {
   if (*uuid != '') { sendEntityRemove(DATA_OBJECT_TYPE, *uuid, $objPath); }
 }
 
-# This rule redirects to the put rule to ensure that other rule sets get called correctly on files
-# extracted from bundles.
-#
-ipc_acPostProcForTarFileReg { acPostProcForPut; }
-
 # This sends a collection or data-object ACL modification message for the updated object.
 #
 ipc_acPostProcForModifyAccessControl(*RecursiveFlag, *AccessLevel, *UserName, *Zone, *Path) {
