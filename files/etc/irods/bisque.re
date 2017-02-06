@@ -59,9 +59,9 @@ ln(*IESHost, *Permission, *Client, *Path) {
 # End of workaround
       msiString2KeyValPair(*kvStr, *kvs);
       msiGetValByKey(*kvs, 'resource_uniq', *qId);
-      *id = substr(*qId, 1, strlen(*qId) - 2);
+      *id = substr(*qId, 1, strlen(*qId) - 1);
       msiGetValByKey(*kvs, 'uri', *qURI);
-      *uri = substr(*qURI, 1, strlen(*qURI) - 2);
+      *uri = substr(*qURI, 1, strlen(*qURI) - 1);
       msiString2KeyValPair(BISQUE_ID_ATTR ++ '=' ++ *id ++ '%' ++ BISQUE_URI_ATTR ++ '=' ++ *uri,
                            *kv);
       msiSetKeyValuePairsToObj(*kv, *Path, '-d');
