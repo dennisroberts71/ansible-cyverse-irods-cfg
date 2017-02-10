@@ -28,15 +28,25 @@
     owner: irods
   with_fileglob:
     - "etc/irods/*"
+  register: statics
 
 - name: place ipc-env.re
   template:
     src: etc/irods/ipc-env.re.j2
     dest: /etc/irods/ipc-env.re
     owner: irods
+  register: ipc_env
 
 - name: place sernec-env.re
   template:
     src: etc/irods/sernec-env.re.j2
     dest: /etc/irods/sernec-env.re
     owner: irods
+  register: sernec_env
+
+- name: ensure that config files are reloaded
+  when: statics|changed or ipc_env|changed or sernec_env|changed
+  file:
+    path: /etc/irods/core.re
+    state: touch
+
