@@ -1,4 +1,4 @@
-# VERSION: 17
+# VERSION: 18
 #
 # All customizations done to the iRODS rule logic are placed in this file or should be included by
 # this file.
@@ -30,12 +30,13 @@
 # POLICIES
 
 acBulkPutPostProcPolicy { msiSetBulkPutPostProcPolicy('on'); }
-acSetReServerNumProc { msiSetReServerNumProc('4'); }
 
 acCreateCollByAdmin(*ParColl, *ChildColl) {
   msiCreateCollByAdmin(*ParColl, *ChildColl);
   ipc_acCreateCollByAdmin(*ParColl, *ChildColl);
 }
+
+acDataDeletePolicy { ipc_acDataDeletePolicy; }
 
 acDeleteCollByAdmin(*ParColl, *ChildColl) {
   msiDeleteCollByAdmin(*ParColl, *ChildColl);
@@ -52,11 +53,7 @@ acDeleteCollByAdminIfPresent(*ParColl, *ChildColl) {
   } 
 }
 
-acDataDeletePolicy { ipc_acDataDeletePolicy; }
-
-acSetNumThreads {
-  msiSetNumThreads('default', 'default', 'default');
-}
+acSetNumThreads { msiSetNumThreads('default', 'default', 'default'); }
 
 acSetRescSchemeForCreate { 
   *err = errormsg(ipc_acSetRescSchemeForCreate, *msg);
@@ -73,6 +70,8 @@ acSetRescSchemeForRepl {
   *err = errormsg(aegis_acSetRescSchemeForRepl, *msg);
   if (*err < 0) { writeLine('serverLog', *msg); }
 }
+
+acSetReServerNumProc { msiSetReServerNumProc('4'); }
 
 
 # PRE-PROC RULE HOOKS
