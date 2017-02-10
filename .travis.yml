@@ -1,6 +1,6 @@
 ---
 language: python
-python: "2.7"
+python: "2.6"
 
 # Use the new container infrastructure
 sudo: required
@@ -23,6 +23,12 @@ install:
   - printf '[defaults]\nroles_path=../' >ansible.cfg
 
 before_script:
+  # Add pip2.6 to the path
+  - sudo ln -s $(which pip2.6) /usr/bin/pip2.6
+
+  # Install pika for check
+  - sudo -H pip2.6 install pika
+
   # Create irods user
   - sudo useradd --system --home-dir /var/lib/irods irods
 

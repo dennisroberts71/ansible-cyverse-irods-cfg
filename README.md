@@ -58,7 +58,7 @@ Including an example of how to use your role (for instance, with variables passe
 
 ```
 - hosts: irods-servers
-  become: true
+  become_user: irods
   gather_facts: true
   roles:
     - role: cyverse-irods-cfg

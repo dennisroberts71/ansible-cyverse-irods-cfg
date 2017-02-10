@@ -1,8 +1,6 @@
 ---
-- name: ensure pika installed
-  pip:
-    name: pika
-    state: latest
+- name: verify that pika is installed
+  shell: pip2.6 show pika
 
 - name: install amqptopicsend.py
   copy:
