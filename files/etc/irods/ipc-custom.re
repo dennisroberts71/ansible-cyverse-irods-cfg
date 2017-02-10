@@ -53,6 +53,8 @@ acDeleteCollByAdminIfPresent(*ParColl, *ChildColl) {
   } 
 }
 
+acPreConnect(*OUT) { *OUT = 'CS_NEG_REFUSE'; }
+
 acSetNumThreads { msiSetNumThreads('default', 'default', 'default'); }
 
 acSetRescSchemeForCreate { 
