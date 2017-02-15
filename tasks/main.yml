@@ -37,6 +37,13 @@
     owner: irods
   register: ipc_env
 
+- name: place bisque-env.re
+  template:
+    src: etc/irods/bisque-env.re.j2
+    dest: /etc/irods/bisque-env.re
+    owner: irods
+  register: bisque_env
+
 - name: place sernec-env.re
   template:
     src: etc/irods/sernec-env.re.j2
@@ -45,7 +52,7 @@
   register: sernec_env
 
 - name: ensure that config files are reloaded
-  when: statics|changed or ipc_env|changed or sernec_env|changed
+  when: statics|changed or ipc_env|changed or bisque_env|changed or sernec_env|changed
   file:
     path: /etc/irods/core.re
     state: touch

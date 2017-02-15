@@ -1,10 +1,13 @@
-# VERSION 3
+# VERSION 4
 #
 # bisque.re  
 # Bisque related rules for > iRods 4.0
 # put this in server/config/reConfigs/bisque.re
 # include this file from within ipc-custom.re
 ###############################################
+
+@include 'bisque-env'
+
 
 BISQUE_GROUPS = list('NEVP', 'sernec')
 BISQUE_ID_ATTR = 'ipc-bisque-id'
@@ -14,7 +17,7 @@ BISQUE_URI_ATTR = 'ipc-bisque-uri'
 logMsg(*Msg) = writeLine('serverLog', 'BISQUE: *Msg')
 
 
-mkURL(*IESHost, *Path) = "irods://" ++ *IESHost ++ *Path
+mkURL(*Path) = "irods://" ++ bisque_IRODS_HOST ++ *Path
 
 
 # Tells BisQue to create a link for a given user to a data object.
@@ -26,7 +29,7 @@ ln(*IESHost, *Permission, *Client, *Path) {
     logMsg("linking *Path for *Client with permission *Permission");
     *pArg = execCmdArg(*Permission);
     *aliasArg = execCmdArg(*Client);
-    *pathArg = execCmdArg(mkURL(*IESHost, *Path));
+    *pathArg = execCmdArg(mkURL(*Path));
     *argStr = 'ln -P *pArg --alias *aliasArg *pathArg';
     *status = errorcode(msiExecCmd("bisque_ops.py", *argStr, *IESHost, "null", "null", *out));
     if (*status != 0) {
@@ -80,8 +83,8 @@ mv(*IESHost, *Client, *OldPath, *NewPath) {
   delay("<PLUSET>1s</PLUSET>") {
     logMsg('moving link from *OldPath to *NewPath for *Client');
     *aliasArg = execCmdArg(*Client);
-    *oldPathArg = execCmdArg(mkURL(*IESHost, *OldPath));
-    *newPathArg = execCmdArg(mkURL(*IESHost, *NewPath));
+    *oldPathArg = execCmdArg(mkURL(*OldPath));
+    *newPathArg = execCmdArg(mkURL(*NewPath));
     *argStr = 'mv --alias *aliasArg *oldPathArg *newPathArg';
     *status = errorcode(msiExecCmd('bisque_ops.py', *argStr, *IESHost, 'null', 'null', *out));
     if (*status != 0) {
@@ -111,7 +114,7 @@ rm(*IESHost, *Client, *Path) {
   delay("<PLUSET>1s</PLUSET>") {
     logMsg("Removing link from *Path for *Client");
     *aliasArg = execCmdArg(*Client);
-    *pathArg = execCmdArg(mkURL(*IESHost, *Path));
+    *pathArg = execCmdArg(mkURL(*Path));
     *argStr = 'rm --alias *aliasArg *pathArg';
     *status = errorcode(msiExecCmd("bisque_ops.py", *argStr, *IESHost, "null", "null", *out));
     if (*status != 0) {

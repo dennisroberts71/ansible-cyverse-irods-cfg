@@ -5,6 +5,7 @@
   vars_files:
     - ../defaults/main.yml
   vars:
+    bisque_env: "{{ lookup('template', '../templates/etc/irods/bisque-env.re.j2') }}"
     database_config: "{{ lookup('template', '../templates/etc/irods/database_config.json.j2') }}"
     ipc_env: "{{ lookup('template', '../templates/etc/irods/ipc-env.re.j2') }}"
     irods_environment: "{{ 
@@ -55,6 +56,11 @@
           - ipc_env | search("ipc_RE_HOST = 'localhost'")
           - ipc_env | search("ipc_RODSADMIN = 'rods'")
 
+    - name: verify bisque constants expand correctly in bisque-env.re.j2
+      assert:
+        that:
+          - bisque_env | search("bisque_IRODS_HOST = '{{ irods_icat_host }}'")
+
     - name: verify sernec constants expand correctly in sernec-env.re.j2
       assert:
         that:
@@ -90,6 +96,20 @@
         that:
           - ipc_env | search("ON($rescName == 'resource-1' && $clientAddr == ipc_IES_IP)" | regex_escape)
           - ipc_env | search("ON($rescName == 'resource-2' && $clientAddr == ipc_IES_IP)" | regex_escape)
+
+- name: test that BisQue iRODS host is correctly assigned
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../defaults/main.yml
+    - vars/bisque_irods_host.yml
+  vars:
+    bisque_env: "{{ lookup('template', '../templates/etc/irods/bisque-env.re.j2') }}"
+  tasks:
+    - name: verify bisque_env
+      assert:
+        that:
+          - bisque_env | search("bisque_IRODS_HOST = 'irods'")
 
 - name: test that sernec perm groups are generated correctly
   hosts: localhost

@@ -17,6 +17,7 @@
       with_items:
         - aegis.re
         - bisque.re
+        - bisque-env.re
         - coge.re
         - ipc-amqp.re
         - ipc-custom.re
