@@ -1,12 +1,10 @@
-# VERSION 4
+# VERSION 5
 #
 # bisque.re  
 # Bisque related rules for > iRods 4.0
 # put this in server/config/reConfigs/bisque.re
 # include this file from within ipc-custom.re
 ###############################################
-
-@include 'bisque-env'
 
 
 BISQUE_GROUPS = list('NEVP', 'sernec')
@@ -17,19 +15,16 @@ BISQUE_URI_ATTR = 'ipc-bisque-uri'
 logMsg(*Msg) = writeLine('serverLog', 'BISQUE: *Msg')
 
 
-mkURL(*Path) = "irods://" ++ bisque_IRODS_HOST ++ *Path
-
-
 # Tells BisQue to create a link for a given user to a data object.
 #
-# bisque_ops.py --alias user ln -P permission irods://ies.host/path/to/data.object
+# bisque_ops.py --alias user ln -P permission /path/to/data.object
 ln(*IESHost, *Permission, *Client, *Path) {
   logMsg("scheduling linking of *Path for *Client with permission *Permission");
   delay("<PLUSET>1s</PLUSET>") {
     logMsg("linking *Path for *Client with permission *Permission");
     *pArg = execCmdArg(*Permission);
     *aliasArg = execCmdArg(*Client);
-    *pathArg = execCmdArg(mkURL(*Path));
+    *pathArg = execCmdArg(*Path);
     *argStr = '--alias *aliasArg ln -P *pArg *pathArg';
     *status = errorcode(msiExecCmd("bisque_ops.py", *argStr, *IESHost, "null", "null", *out));
     if (*status != 0) {
@@ -76,15 +71,14 @@ ln(*IESHost, *Permission, *Client, *Path) {
 
 # Tells BisQue to change the path of a linked data object.
 #
-# bisque_ops.py --alias user \
-#     mv irods://ies.host/old/path/to/data.object irods://ies.host/new/path/to/data.object
+# bisque_ops.py --alias user mv /old/path/to/data.object /new/path/to/data.object
 mv(*IESHost, *Client, *OldPath, *NewPath) {
   logMsg('scheduling link move from *OldPath to *NewPath for *Client');
   delay("<PLUSET>1s</PLUSET>") {
     logMsg('moving link from *OldPath to *NewPath for *Client');
     *aliasArg = execCmdArg(*Client);
-    *oldPathArg = execCmdArg(mkURL(*OldPath));
-    *newPathArg = execCmdArg(mkURL(*NewPath));
+    *oldPathArg = execCmdArg(*OldPath);
+    *newPathArg = execCmdArg(*NewPath);
     *argStr = '--alias *aliasArg mv *oldPathArg *newPathArg';
     *status = errorcode(msiExecCmd('bisque_ops.py', *argStr, *IESHost, 'null', 'null', *out));
     if (*status != 0) {
@@ -108,13 +102,13 @@ mv(*IESHost, *Client, *OldPath, *NewPath) {
 
 # Tells BisQue to remove a link to data object.
 #
-# bisque_ops.py --alias user rm irods://ies.host/path/to/data.object
+# bisque_ops.py --alias user rm /path/to/data.object
 rm(*IESHost, *Client, *Path) {
   logMsg("scheduling removal of linking to *Path for *Client");
   delay("<PLUSET>1s</PLUSET>") {
     logMsg("Removing link from *Path for *Client");
     *aliasArg = execCmdArg(*Client);
-    *pathArg = execCmdArg(mkURL(*Path));
+    *pathArg = execCmdArg(*Path);
     *argStr = '--alias *aliasArg rm *pathArg';
     *status = errorcode(msiExecCmd("bisque_ops.py", *argStr, *IESHost, "null", "null", *out));
     if (*status != 0) {

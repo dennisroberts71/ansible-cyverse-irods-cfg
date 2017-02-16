@@ -17,7 +17,6 @@
       with_items:
         - aegis.re
         - bisque.re
-        - bisque-env.re
         - coge.re
         - ipc-amqp.re
         - ipc-custom.re
@@ -28,6 +27,12 @@
         - sernec.re
         - sernec-env.re
         - server_config.json
+
+    - name: Verify bisque-env.re not present
+      stat:
+        path: /etc/irods/bisque-env.re
+      register: response
+      failed_when: response.stat.exists
 
     - name: Verify database_config.json is in place
       stat:
