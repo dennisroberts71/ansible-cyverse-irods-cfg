@@ -30,7 +30,7 @@ ln(*IESHost, *Permission, *Client, *Path) {
     *pArg = execCmdArg(*Permission);
     *aliasArg = execCmdArg(*Client);
     *pathArg = execCmdArg(mkIrodsUrl(*Path));
-    *argStr = '--alias *aliasArg ln -P *pArg *pathArg';
+    *argStr = '--alias *aliasArg -P *pArg ln *pathArg';
     *status = errorcode(msiExecCmd("bisque_ops.py", *argStr, *IESHost, "null", "null", *out));
     if (*status != 0) {
       msiGetStderrInExecCmdOut(*out, *resp);
