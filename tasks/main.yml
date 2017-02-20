@@ -37,10 +37,11 @@
     owner: irods
   register: ipc_env
 
-- name: remove bisque-env.re
-  file:
-    path: /etc/irods/bisque-env.re
-    state: absent
+- name: place bisque-env.re
+  template:
+    src: etc/irods/bisque-env.re.j2
+    dest: /etc/irods/bisque-env.re
+    owner: irods
   register: bisque_env
 
 - name: place sernec-env.re

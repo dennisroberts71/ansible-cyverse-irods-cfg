@@ -1,4 +1,4 @@
-# VERSION 5
+# VERSION 6
 #
 # bisque.re  
 # Bisque related rules for > iRods 4.0
@@ -6,13 +6,18 @@
 # include this file from within ipc-custom.re
 ###############################################
 
+@include 'bisque-env'
+
 
 BISQUE_GROUPS = list('NEVP', 'sernec')
 BISQUE_ID_ATTR = 'ipc-bisque-id'
 BISQUE_URI_ATTR = 'ipc-bisque-uri'
 
- 
+
 logMsg(*Msg) = writeLine('serverLog', 'BISQUE: *Msg')
+
+
+mkIrodsUrl(*Path) = bisque_IRODS_URL_BASE ++ *Path
 
 
 # Tells BisQue to create a link for a given user to a data object.
@@ -24,7 +29,7 @@ ln(*IESHost, *Permission, *Client, *Path) {
     logMsg("linking *Path for *Client with permission *Permission");
     *pArg = execCmdArg(*Permission);
     *aliasArg = execCmdArg(*Client);
-    *pathArg = execCmdArg(*Path);
+    *pathArg = execCmdArg(mkIrodsUrl(*Path));
     *argStr = '--alias *aliasArg ln -P *pArg *pathArg';
     *status = errorcode(msiExecCmd("bisque_ops.py", *argStr, *IESHost, "null", "null", *out));
     if (*status != 0) {
@@ -77,8 +82,8 @@ mv(*IESHost, *Client, *OldPath, *NewPath) {
   delay("<PLUSET>1s</PLUSET>") {
     logMsg('moving link from *OldPath to *NewPath for *Client');
     *aliasArg = execCmdArg(*Client);
-    *oldPathArg = execCmdArg(*OldPath);
-    *newPathArg = execCmdArg(*NewPath);
+    *oldPathArg = execCmdArg(mkIrodsUrl(*OldPath));
+    *newPathArg = execCmdArg(mkIrodsUrl(*NewPath));
     *argStr = '--alias *aliasArg mv *oldPathArg *newPathArg';
     *status = errorcode(msiExecCmd('bisque_ops.py', *argStr, *IESHost, 'null', 'null', *out));
     if (*status != 0) {
@@ -108,7 +113,7 @@ rm(*IESHost, *Client, *Path) {
   delay("<PLUSET>1s</PLUSET>") {
     logMsg("Removing link from *Path for *Client");
     *aliasArg = execCmdArg(*Client);
-    *pathArg = execCmdArg(*Path);
+    *pathArg = execCmdArg(mkIrodsUrl(*Path));
     *argStr = '--alias *aliasArg rm *pathArg';
     *status = errorcode(msiExecCmd("bisque_ops.py", *argStr, *IESHost, "null", "null", *out));
     if (*status != 0) {
