@@ -22,7 +22,11 @@
             "zone_name": "{{ federate.zone_name }}",
             "zone_key": "{{ federate.zone_key }}",
             "negotiation_key": "{{ federate.negotiation_key }}"
-        }{% if not loop.last %},{% endif %}
+{% if loop.last %}
+        }
+{% else %}
+        },
+{% endif %}
 {% endfor %}
     ], 
     "icat_host": "{{ irods_icat_host }}", 
