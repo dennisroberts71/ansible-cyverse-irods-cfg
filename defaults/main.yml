@@ -23,7 +23,7 @@ irods_amqp_ephemeral: true
 
 irods_db:
   host: localhost
-  port: 1247
+  port: 5432
   username: irods
   password: testpassword
                                                 
