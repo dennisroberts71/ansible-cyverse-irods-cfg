@@ -21,7 +21,7 @@
           - database_config.db_port == irods_db.port
           - database_config.db_username == irods_db.username
 
-    - name: verify server_confg.json.j2 expands correctly
+    - name: verify server_config.json.j2 expands correctly
       assert:
         that:
           - server_config.advanced_settings.default_number_of_transfer_threads == irods_default_number_of_transfer_threads
@@ -35,11 +35,13 @@
           - server_config.server_port_range_start == irods_server_port_range_start
           - server_config.zone_key == irods_zone_key
           - server_config.zone_user == irods_zone_user
+          - server_config.federation == irods_federation
 
     - name: verify irods_environment.json.j2 expands correctly
       assert:
         that:
           - irods_environment.irods_host == inventory_hostname
+          - irods_environment.irods_client_server_negotiation == irods_client_server_negotiation
           - irods_environment.irods_default_resource == irods_default_resource_name
           - irods_environment.irods_home == '/iplant/home/' ~ irods_zone_user
           - irods_environment.irods_cwd == '/iplant/home/' ~ irods_zone_user
@@ -67,6 +69,27 @@
          - sernec_env | search('sernec_OWNERS = list()' | regex_escape)
          - sernec_env | search('sernec_WRITERS = list()' | regex_escape)
          - sernec_env | search('sernec_READERS = list()' | regex_escape)
+
+- name: test that federation is correctly generated in server_config.json
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - ../defaults/main.yml
+    - vars/irods_federation.yml
+  vars:
+    server_config: "{{ lookup('template', '../templates/etc/irods/server_config.json.j2') }}"
+  tasks:
+    - name: verify federates
+      assert:
+        that:
+          - server_config.federation[0].icat_host == 'federate1'
+          - server_config.federation[0].zone_name == 'zone1'
+          - server_config.federation[0].zone_key == 'zk1'
+          - server_config.federation[0].negotiation_key == 'nk1'
+          - server_config.federation[1].icat_host == 'federate2'
+          - server_config.federation[1].zone_name == 'zone2'
+          - server_config.federation[1].zone_key == 'zk2'
+          - server_config.federation[1].negotiation_key == 'nk2'
 
 - name: test that AMQP URI is correctly set when provided
   hosts: localhost

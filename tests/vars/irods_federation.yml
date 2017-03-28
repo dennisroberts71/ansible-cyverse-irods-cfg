@@ -1,0 +1,10 @@
+---
+irods_federation:
+  - icat_host: federate1
+    zone_name: zone1
+    zone_key: zk1
+    negotiation_key: nk1
+  - icat_host: federate2
+    zone_name: zone2
+    zone_key: zk2
+    negotiation_key: nk2    

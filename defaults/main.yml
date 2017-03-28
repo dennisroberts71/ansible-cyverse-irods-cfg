@@ -1,5 +1,6 @@
 ---
 irods_icat_host: localhost
+irods_client_server_negotiation: request_server_negotiation
 irods_default_number_of_transfer_threads: 4
 irods_default_resource_name: demoResc
 irods_default_resource_directory: /var/lib/irods/iRODS/Vault
@@ -31,4 +32,6 @@ irods_single_threaded_resources: []
 
 irods_sernec_owners: []
 irods_sernec_writers: []
-irods_sernec_readers: [] 
+irods_sernec_readers: []
+
+irods_federation: [] 

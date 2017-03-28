@@ -15,7 +15,16 @@
     "default_resource_directory": "{{ irods_default_resource_directory }}",
     "default_resource_name": "{{ irods_default_resource_name }}",
     "environment_variables": {}, 
-    "federation": [], 
+    "federation": [
+{% for federate in irods_federation %}
+        {
+            "icat_host": "{{ federate.icat_host }}",
+            "zone_name": "{{ federate.zone_name }}",
+            "zone_key": "{{ federate.zone_key }}",
+            "negotiation_key": "{{ federate.negotiation_key }}"
+        }{% if not loop.last %},{% endif %}
+{% endfor %}
+    ], 
     "icat_host": "{{ irods_icat_host }}", 
     "match_hash_policy": "compatible", 
     "negotiation_key": "{{ irods_negotiation_key }}", 
