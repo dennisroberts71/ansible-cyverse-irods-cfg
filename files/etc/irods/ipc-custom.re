@@ -29,7 +29,10 @@
 
 # POLICIES
 
-acBulkPutPostProcPolicy { msiSetBulkPutPostProcPolicy('on'); }
+acBulkPutPostProcPolicy { 
+  # TODO move this to ipc-logic
+  msiSetBulkPutPostProcPolicy('on'); 
+}
 
 acCreateCollByAdmin(*ParColl, *ChildColl) {
   msiCreateCollByAdmin(*ParColl, *ChildColl);
@@ -53,9 +56,15 @@ acDeleteCollByAdminIfPresent(*ParColl, *ChildColl) {
   } 
 }
 
-acPreConnect(*OUT) { *OUT = 'CS_NEG_REFUSE'; }
+acPreConnect(*OUT) { 
+  # TODO move this into ipc-logic
+  *OUT = 'CS_NEG_REFUSE'; 
+}
 
-acSetNumThreads { msiSetNumThreads('default', 'default', 'default'); }
+acSetNumThreads { 
+  # TODO move this into ipc-logic
+  msiSetNumThreads('default', 'default', 'default'); 
+}
 
 acSetRescSchemeForCreate { 
   *err = errormsg(ipc_acSetRescSchemeForCreate, *msg);
@@ -73,7 +82,10 @@ acSetRescSchemeForRepl {
   if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
-acSetReServerNumProc { msiSetReServerNumProc('4'); }
+acSetReServerNumProc { 
+  # TODO move this to ipc-logic
+  msiSetReServerNumProc('4'); 
+}
 
 
 # PRE-PROC RULE HOOKS
@@ -197,3 +209,7 @@ acPostProcForModifyAVUMetadata(*Option, *SourceItemType, *TargetItemType, *Sourc
                                      *TargetItemName);
 }
 
+acPostProcForParallelTransferReceived(*LeafResource) {
+    # TODO move this into ipc_custom
+    msi_update_unixfilesystem_resource_free_space(*LeafResource);
+}
