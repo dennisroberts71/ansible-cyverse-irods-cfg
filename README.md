@@ -8,7 +8,7 @@ This is a role for configuring CyVerse iRODS 4 grids.
 Requirements
 ------------
 
-It is assumed that iRODS 4.1.9 is already installed on the server.
+It is assumed that iRODS 4.1.10 is already installed on the server.
 
 Role Variables
 --------------
