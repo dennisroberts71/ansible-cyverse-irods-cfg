@@ -1,4 +1,4 @@
-# VERSION: 21
+# VERSION: 22
 #
 # The iPLANT specific, environment idependent rule customizations.
 #
@@ -375,6 +375,21 @@ cpUnprotectedUserAVUs(*User, *TargetType, *TargetName) =
   }
 
 
+# Perform post proc on bolk uploads
+#
+ipc_acBulkPutPostProcPolicy {  msiSetBulkPutPostProcPolicy('on'); }
+
+
+# Refuse SSL connections
+#
+ipc_acPreConnect(*OUT) { *OUT = 'CS_NEG_REFUSE'; }
+
+
+# Use default threading setting
+#
+ipc_acSetNumThreads { msiSetNumThreads('default', 'default', 'default'); }
+
+
 # This rule makes ensures that the correct resource is used when for newly created files when one
 # isn't explicitly chosen.
 #
@@ -385,6 +400,11 @@ ipc_acSetRescSchemeForCreate { msiSetDefaultResc(ipc_DEFAULT_RESC, 'preferred');
 # explicitly chosen.
 #
 ipc_acSetRescSchemeForRepl { msiSetDefaultResc(ipc_DEFAULT_RESC, 'preferred'); }
+
+
+# Have four rule engine processes
+#
+acSetReServerNumProc { msiSetReServerNumProc('4'); }
 
 
 # This rule makes the admin group owner of a collection when a collection is created by an
@@ -610,5 +630,13 @@ ipc_acPostProcForModifyAVUMetadata(*Option, *SourceItemType, *TargetItemType, *S
   if (*source != '' && *target != '') {
     sendAvuCopy(*SourceItemType, *TargetItemType, *Source, *Target);
   }
+}
+
+
+# Whenever a large file is uploaded, recheck the free space on the storage 
+# resource server where the file was written.
+#
+ipc_acPostProcForParallelTransferReceived(*LeafResource) { 
+  msi_update_unixfilesystem_resource_free_space(*LeafResource); 
 }
 
