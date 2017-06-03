@@ -15,7 +15,7 @@ galaxy_info:
   # - Apache
   # - CC-BY
   license:
-    - BSD
+    - See license.md
 
   min_ansible_version: 2.1.1.0
 
