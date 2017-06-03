@@ -18,6 +18,9 @@ galaxy_info:
         - 13.2
 
   galaxy_tags:
+    - CyVerse
+    - DataStore
     - iRODS
+    - configuration
 
 dependencies: []
