@@ -8,7 +8,7 @@
     bisque_env: "{{ lookup('template', '../templates/etc/irods/bisque-env.re.j2') }}"
     database_config: "{{ lookup('template', '../templates/etc/irods/database_config.json.j2') }}"
     ipc_env: "{{ lookup('template', '../templates/etc/irods/ipc-env.re.j2') }}"
-    irods_environment: "{{ 
+    irods_environment: "{{
       lookup('template', '../templates/var/lib/irods/irods/irods_environment.json.j2') }}"
     sernec_env: "{{ lookup('template', '../templates/etc/irods/sernec-env.re.j2') }}"
     server_config: "{{ lookup('template', '../templates/etc/irods/server_config.json.j2') }}"
@@ -47,8 +47,6 @@
           - irods_environment.irods_cwd == '/iplant/home/' ~ irods_zone_user
           - irods_environment.irods_user_name == irods_zone_user
           - irods_environment.irods_server_control_plane_key == irods_server_control_plane_key
-          - irods_environment.irods_default_number_of_transfer_threads == irods_default_number_of_transfer_threads
-          - irods_environment.irods_transfer_buffer_size_for_parallel_transfer_in_megabytes == irods_parallel_transfer_buffer_size
 
     - name: verify constants expand correctly in ipc-env.re.j2
       assert:

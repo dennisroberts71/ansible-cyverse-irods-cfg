@@ -20,7 +20,7 @@ install:
   - ansible --version
 
   # Create ansible.cfg with correct roles_path
-  - printf '[defaults]\nroles_path=../' >ansible.cfg
+  - printf '[defaults]\nroles_path=../' > ansible.cfg
 
 before_script:
   # Add pip2.6 to the path
