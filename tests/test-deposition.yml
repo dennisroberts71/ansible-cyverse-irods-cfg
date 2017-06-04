@@ -10,7 +10,7 @@
 
   post_tasks:
     - name: Retrieve configuration files
-      stat: 
+      stat:
         path: /etc/irods/{{ item }}
       register: response
       failed_when: not response.stat.exists
@@ -31,7 +31,7 @@
 
     - name: Verify database_config.json is in place
       stat:
-        path: /etc/irods/database_config.json 
+        path: /etc/irods/database_config.json
       register: response
       failed_when: not response.stat.exists
 
@@ -46,6 +46,24 @@
         path: /var/lib/irods/iRODS/server/bin/cmd/amqptopicsend.py
       register: response
       failed_when: not response.stat.exists
+
+- name: verify irods_environment.json has correct contents
+  hosts: localhost
+  become: true
+  gather_facts: false
+  vars:
+    - irods_environment: "{{ lookup('file', '/var/lib/irods/.irods/irods_environment.json') }}"
+  tasks:
+    - name: verify irods_environment.json is created correctly
+      assert:
+        that:
+          - irods_environment.irods_client_server_negotiation == 'request_server_negotiation'
+          - irods_environment.irods_client_server_policy == 'CS_NEG_REFUSE'
+          - irods_environment.irods_control_plane_key == 'TEMPORARY__32byte_ctrl_plane_key'
+          - irods_environment.irods_default_hash_scheme == 'MD5'
+          - irods_environment.irods_default_resource == 'demoResc'
+          - irods_environment.irods_user_name == 'rods'
+          - irods_environment.irods_zone_name == 'iplant'
 
 - name: test resource server configured correctly
   hosts: localhost
@@ -62,7 +80,7 @@
   post_tasks:
     - name: Verify database_config.json is not in place
       stat:
-        path: /etc/irods/database_config.json 
+        path: /etc/irods/database_config.json
       register: response
       failed_when: response.stat.exists
 

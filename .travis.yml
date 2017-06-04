@@ -40,8 +40,11 @@ before_script:
   - sudo chown --recursive irods:irods /etc/irods /var/lib/irods
 
 script:
+  # install role dependencies
+  - ansible-galaxy install --role-file=tests/requirements.yml
+
   # The test
-  - ansible-playbook -i tests/inventory tests/main.yml
+  - ansible-playbook --inventory-file=tests/inventory tests/main.yml
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

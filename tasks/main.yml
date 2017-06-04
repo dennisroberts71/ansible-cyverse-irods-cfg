@@ -12,13 +12,7 @@
     dest: /etc/irods/server_config.json
     owner: irods
 
-- name: place irods_environment.json
-  template:
-    src: var/lib/irods/irods/irods_environment.json.j2
-    dest: /var/lib/irods/.irods/irods_environment.json
-    owner: irods
-
-- include: install_amqptopicsend.yml 
+- include: install_amqptopicsend.yml
   when: inventory_hostname == irods_icat_host
 
 - name: place static config in /etc/irods
@@ -56,4 +50,3 @@
   file:
     path: /etc/irods/core.re
     state: touch
-

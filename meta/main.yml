@@ -23,4 +23,13 @@ galaxy_info:
     - iRODS
     - configuration
 
-dependencies: []
+dependencies:
+  - role: CyVerse-Ansible.irods-env
+    irods_env_for_server: true
+    irods_env_client_server_negotiation: "{{ irods_client_server_negotiation }}"
+    irods_env_client_server_policy: CS_NEG_REFUSE
+    irods_env_control_plane_key: "{{ irods_server_control_plane_key }}"
+    irods_env_default_hash_scheme: MD5
+    irods_env_default_resource: "{{ irods_default_resource_name }}"
+    irods_env_user_name: "{{ irods_zone_user }}"
+    irods_env_zone_name: iplant
