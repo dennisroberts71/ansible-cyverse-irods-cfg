@@ -106,6 +106,12 @@ sendCollectionAdd(*Collection, *Path) =
                                    mkPathField(*Path)))
   in sendMsg(COLLECTION_TYPE ++ '.add', *msg)
 
+sendDataObjectOpen(*Data) =
+  let *msg = ipc_jsonDocument(list(mkEntityField(*Data),
+                                   mkPathField($objPath),
+                                   mkUserObject('accessor', $userNameClient, $rodsZoneClient)))
+  in sendMsg(DATA_OBJECT_TYPE ++ '.open', *msg)
+
 sendDataObjectAdd(*Data) =
   let *msg = ipc_jsonDocument(list(mkAuthorField(),
                                    mkEntityField(*Data),
@@ -450,6 +456,11 @@ ipc_acPostProcForCollCreate {
   
   *err = errormsg(sendCollectionAdd(assignUUID('-c', $collName), $collName), *msg);
   if (*err < 0) { writeLine('serverLog', *msg); }
+}
+
+ipc_acPostProcForOpen {
+  *uuid = retrieveDataUUID($objPath);
+  if (*uuid != '') { sendDataObjectOpen(*uuid); }
 }
 
 ipc_acPreprocForRmColl { temporaryStorage.'$collName' = retrieveCollectionUUID($collName); }
