@@ -65,6 +65,9 @@ Variable          | Required | Default | Choices | Comments
 Dependencies
 ------------
 
+This role depends on [CyVerse-Ansible.irods-env](https://galaxy.ansible.com/CyVerse-Ansible/irods-env/) for the generation and deposition of the server's irods_environment.json file.
+
+
 Example Playbook
 ----------------
 
