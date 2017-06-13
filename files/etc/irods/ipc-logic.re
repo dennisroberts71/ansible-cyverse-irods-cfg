@@ -114,7 +114,7 @@ sendCollectionAdd(*Collection, *Path) =
 sendDataObjectOpen(*Data) =
   let *msg = ipc_jsonDocument(list(mkEntityField(*Data),
                                    mkPathField($objPath),
-                                   mkUserObject('accessor', $userNameClient, $rodsZoneClient),
+                                   mkUserObject('author', $userNameClient, $rodsZoneClient),
                                    ipc_jsonString('timestamp', getTimestamp())))
   in sendMsg(DATA_OBJECT_TYPE ++ '.open', *msg)
 
