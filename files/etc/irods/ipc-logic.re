@@ -15,6 +15,11 @@ RESOURCE_TYPE = 'resource'
 RESOURCE_GROUP_TYPE = 'resource-group'
 USER_TYPE = 'user'
 
+getTimestamp() {
+  msiGetSystemTime(*timestamp, 'human')
+  *timestamp
+}
+
 contains(*item, *list) {
   *result = false;
   foreach (*currItem in *list) {
@@ -105,6 +110,13 @@ sendCollectionAdd(*Collection, *Path) =
                                    mkEntityField(*Collection),
                                    mkPathField(*Path)))
   in sendMsg(COLLECTION_TYPE ++ '.add', *msg)
+
+sendDataObjectOpen(*Data) =
+  let *msg = ipc_jsonDocument(list(mkEntityField(*Data),
+                                   mkPathField($objPath),
+                                   mkUserObject('author', $userNameClient, $rodsZoneClient),
+                                   ipc_jsonString('timestamp', getTimestamp())))
+  in sendMsg(DATA_OBJECT_TYPE ++ '.open', *msg)
 
 sendDataObjectAdd(*Data) =
   let *msg = ipc_jsonDocument(list(mkAuthorField(),
@@ -450,6 +462,11 @@ ipc_acPostProcForCollCreate {
   
   *err = errormsg(sendCollectionAdd(assignUUID('-c', $collName), $collName), *msg);
   if (*err < 0) { writeLine('serverLog', *msg); }
+}
+
+ipc_acPostProcForOpen {
+  *uuid = retrieveDataUUID($objPath);
+  if (*uuid != '') { sendDataObjectOpen(*uuid); }
 }
 
 ipc_acPreprocForRmColl { temporaryStorage.'$collName' = retrieveCollectionUUID($collName); }
