@@ -146,6 +146,11 @@ acPostProcForCollCreate {
   if (*err < 0) { writeLine('serverLog', *msg); }
 }
 
+acPostProcForOpen {
+  *err = errormsg(ipc_acPostProcForOpen, *msg);
+  if (*err < 0) { writeLine('serverLog', *msg); }
+}
+
 acPostProcForRmColl { ipc_acPostProcForRmColl; }
 
 acPostProcForDelete {

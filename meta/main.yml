@@ -26,7 +26,6 @@ galaxy_info:
 dependencies:
   - src: CyVerse-Ansible.irods-env
     version: 1.0
-    name: cyverse.irods-env
     vars:
       irods_env_for_server: true
       irods_env_client_server_negotiation: "{{ irods_client_server_negotiation }}"
